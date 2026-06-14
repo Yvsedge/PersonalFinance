@@ -67,6 +67,9 @@ Through this project I gained experience with:
 
 ## Installation
 
+> **Note:** The backend and frontend must both be running simultaneously. 
+> Open two terminal windows — one for each.
+
 ### Clone the repository
 
 ```bash
@@ -77,7 +80,6 @@ cd YOUR_REPOSITORY
 ### Install frontend dependencies
 
 ```bash
-cd src
 npm install
 ```
 
@@ -89,13 +91,15 @@ npm install
 ```
 
 ### Environment Setup
-
 Create a `.env` file in the root directory:
+```
 VITE_API_URL=http://localhost:3000
+```
 
 ### Run the backend
 
 ```bash
+cd backend
 node server
 ```
 
