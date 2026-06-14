@@ -1,0 +1,447 @@
+.activeLink {
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.spinnerOverlay {
+    position: fixed;
+    inset: 0;  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--background);
+}
+
+.pageContainer {
+    margin: 0 auto;
+    padding: var(--space-4);
+}
+
+.subheading{
+    font-size: var(--subheading);
+    margin: var(--space-3) ;
+}
+
+.Title{
+    color: var(--primary);
+    font-size: var(--heading);
+    display: flex;
+    flex-direction: column;
+}
+
+.Title::After{
+    content: " ";
+    display: block;
+    margin-top: -3px;
+    width: 100%;
+    height: 5px;
+    background-color: var(--accent);
+}
+
+
+
+/*Cards*/
+
+.CardContainer{
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-2);
+    height: fit-content;
+}
+
+.gain{
+    color: var(--success);
+}
+
+.loss{
+    color: var(--expense);
+}
+
+.balanceCard.gain{
+    color: var(--success);
+    border-top: 4px solid var(--success);
+}
+
+.balanceCard.loss{
+    color: var(--expense);
+    border-top: 4px solid var(--expense);
+}
+
+.balanceCard{
+    grid-area: balance;
+}
+
+.incomeCard{
+    grid-area: income;  
+}
+
+.incomeCard.gain{
+    border-top: 4px solid var(--success); 
+}
+
+.expenseCard {
+    grid-area: expense;
+}
+
+.expenseCard.loss{
+    border-top: 4px solid var(--expense);
+}
+
+.CardContainer .CardAmount{
+    font-size: var(--heading);
+    font-weight: bold;
+
+}
+
+.CardContainer .CardTitle{
+    font-size: var(--body-text);
+    color: var(--text-secondary);
+}
+
+.CatcardContainer{
+    display: flex;
+    flex-direction: column; 
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-3);
+    background-color: var(--surface);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+    border-bottom: none;
+}
+
+.CatcardRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.CatcardStats{
+    display: flex;
+    gap: var(--space-2);
+}
+
+.Catcardp{
+    color: var(--text-secondary);
+    font-size: var(--sub-text)
+}
+
+.progressBar{
+    min-width: 4px;
+    background-color: var(--primary);
+    content: " ";
+    transition: width 0.3s;
+    height: 7px;
+}
+
+/*Dashboard*/
+
+.dashboardContainer{
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5)
+}
+
+.dashboardStats{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    padding: var(--space-4);
+    gap: var(--space-4);
+}
+
+.dashboardMain{
+    display: grid;
+    grid-template-areas:
+        "balance balance"
+        "income expense";
+    grid-template-columns: 1fr 1fr;
+    padding: var(--space-4);
+    gap: var(--space-4);
+}
+
+.dashboardSub{
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+}
+
+.sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: var(--space-3);
+}
+
+.sectionHeader .dashboardSubHeading{
+    margin: var(--space-1) 0;
+}
+
+
+.dashboardCat{
+    margin: var(--space-1) var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.dashboardCat > div{
+    border-top: 2px solid var(--border);
+}
+
+.dashboardSubHeading{
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.recentList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.recentList .incomeFlow{
+    border-left: 5px solid var(--success);
+}
+
+.recentList .expenseFlow{
+border-left: 5px solid var(--expense);
+}
+
+.recentRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    align-items: center;
+    padding: var(--space-2) var(--space-3);
+    border-top: 1px solid var(--border);
+    
+}
+
+.recentRow:first-child {
+    border-top: none;
+}
+
+/*Transcations*/
+
+.addExpenseContainer {
+    display: grid;
+    grid-template-columns: 1fr 500px;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    align-items: start;
+}
+
+.FlowTitle{
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: var(--subheading);
+}
+.transactionListHeader{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.transactionListHeader .btns{
+    display: flex;
+    gap: var(--space-1);
+}
+
+.transactionListHeader .btns .filterBtn {
+    background: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    border-radius: var(--radius-full);
+    padding: var(--space-1) var(--space-3);
+}
+
+.transactionListHeader .btns .filterBtn.active {
+    background: var(--primary);
+    color: var(--background);
+}
+
+.transactionListHeader input{
+    margin: 0px var(--space-3);
+}
+
+.transactionListHeader #searchBar {
+    max-width: 300px;
+}
+
+
+.ExpenseCard {
+    padding: var(--space-3) var(--space-4);
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid var(--border);  /* divider only */
+    background-color: transparent;
+    border-radius: 0;
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: var(--sub-text);
+}
+
+.formTitle{
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: var(--subheading);
+    margin-bottom: var(--space-2);
+}
+
+.cancelBtn {
+    width: 100%;
+    padding: var(--space-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.ExpenseCard:last-child {
+    border-bottom: none;  /* no divider on last row */
+}
+
+/* Wrap all cards in one container */
+.transactionList {
+    margin-top: var(--space-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background-color: var(--surface);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;  /* clips the radius on first/last rows */
+}
+
+.ExpenseCardBtns{
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    gap: var(--space-2);
+}
+
+.ExpenseCardBtns .deleteBtn{
+    min-width: 32px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: inherit;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    transition: 0.3s ease-in-out;
+}
+
+.ExpenseCardBtns .editBtn{
+    min-width: 32px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: inherit;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    transition: 0.3s ease-in-out;
+}
+
+.ExpenseCardBtns .deleteBtn:hover{
+    background-color: var(--expense);
+    color: var(--background);
+    border: 1px solid var(--border);
+}
+
+.ExpenseCardBtns .editBtn:hover{
+    background-color: var(--primary);
+    color: var(--background);
+    border: 1px solid var(--border);
+}
+
+.ExpenseCardMain{
+    display: flex;
+    justify-content: space-between;
+}
+
+.incomeFlow{
+    border-left: 8px solid var(--success);
+}
+
+.expenseFlow{
+border-left: 8px solid var(--expense);
+}
+
+.ExpenseCardMain .FlowStats{
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    align-items: flex-start;
+}
+
+.NumericalStats{
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    align-items: center;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.expenseFormContainer {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    box-shadow: var(--shadow-sm);
+    background-color: var(--surface);
+}
+
+.expenseFormContainer form{
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.expenseFormContainer form button{
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-md);
+    background-color: var(--primary);
+    margin-top: var(--space-3);
+    padding: var(--space-3);
+    color: var(--background);
+    transition: 0.1s ease-in;
+}
+
+
+
+.expenseFormContainer form button:active{
+  transform: translateY(1px);
+}
+
+.expenseFormContainer label{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: var(--space-1);
+}
+
+
+input, select {
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    background: var(--background);
+}
+
+input:focus, select:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+    border-color: var(--primary);
+}
