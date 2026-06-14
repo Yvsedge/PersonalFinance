@@ -30,8 +30,6 @@ This project was created as a learning exercise to understand modern frontend de
   * Category-based expense breakdown
   * Recent transactions section
 
-* 🎨 Clean and responsive user interface
-
 ## Tech Stack
 
 ### Frontend
@@ -49,6 +47,10 @@ This project was created as a learning exercise to understand modern frontend de
 
 * REST API
 * JSON-based data handling
+* React Router   
+* React Icons   
+* react-spinners   
+* Vite               
 
 ## What I Learned
 
@@ -75,16 +77,21 @@ cd YOUR_REPOSITORY
 ### Install frontend dependencies
 
 ```bash
-cd client
+cd src
 npm install
 ```
 
 ### Install backend dependencies
 
 ```bash
-cd server
+cd backend
 npm install
 ```
+
+### Environment Setup
+
+Create a `.env` file in the root directory:
+VITE_API_URL=http://localhost:3000
 
 ### Run the backend
 
@@ -151,13 +158,13 @@ The frontend handles UI rendering, state management, and user interactions, whil
 
 ## Future Improvements
 
-* User authentication
-* Database integration (MongoDB/PostgreSQL)
-* Monthly budget tracking
+* Database integration (MongoDB/PostgreSQL) 
+* User authentication             
 * Data visualization and charts
+* Monthly budget tracking
 * Export transaction history
 * Dark mode support
-* Improved mobile responsiveness
+* Mobile responsiveness
 
 ## Screenshots
 
@@ -169,3 +176,7 @@ The frontend handles UI rendering, state management, and user interactions, whil
 
 <img width="1920" height="1050" alt="image" src="https://github.com/user-attachments/assets/4496d726-c051-4857-b115-6f840349bf72" />
 
+## Known Limitations
+* Data is stored in memory — restarting the server resets all transactions
+* No user authentication — all data is shared
+* Not optimized for mobile screens
