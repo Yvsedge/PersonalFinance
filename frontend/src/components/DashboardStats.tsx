@@ -1,4 +1,5 @@
 import {useExp} from '../hooks/useExp'
+import {Link} from 'react-router-dom'
 import CategoryCard from './CategoryCard'
 import RecentTransaction from './RecentTransaction'
 import SummaryCard from './SummaryCards'
@@ -40,7 +41,9 @@ export default function DashboardStats() {
                 <div className="dashboardRecent">
                         <div className="sectionHeader">
                             <span className="subheading dashboardSubHeading">Recent Transactions</span>
-                            <a href="/transactions">View All →</a>
+                            <Link to="/transactions">
+                                View All →
+                            </Link>
                         </div>
                     <RecentTransaction transactions={expenses}></RecentTransaction>
                 </div>
