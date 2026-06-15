@@ -12,3 +12,5 @@ app.use('/expenses', expenseRouter);
 app.listen(port, () => {
     console.log(`Server hosted at localhost:${port}`);
 })
+
+
