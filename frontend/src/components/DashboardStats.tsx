@@ -5,22 +5,20 @@ import SummaryCard from './SummaryCards'
 export default function DashboardStats() {
     const {expenses, dispatch} = useExp();
 
-    const Total = expenses.reduce((accumulator, exp) => exp.amount + accumulator, 0);
-
     const totalIncome  = expenses
         .filter(exp => exp.flow === 'Income')
-        .reduce((acc, exp) => acc + exp.amount, 0);
+        .reduce((acc, exp) => acc + Number(exp.amount), 0);
     
     const incomeTransactions = expenses.filter(exp => exp.flow == "Income").length;
     const expenseTranscations = expenses.filter(exp => exp.flow == "Expense").length;
 
     const totalExpense = expenses
         .filter(exp => exp.flow === 'Expense')
-        .reduce((acc, exp) => acc + exp.amount, 0);
+        .reduce((acc, exp) => acc + Number(exp.amount), 0);
 
     const Balance = totalIncome - totalExpense;
     const categories = expenses.reduce((acc, exp) => {
-        acc[exp.category] = (acc[exp.category] || 0) + exp.amount;
+        acc[exp.category] = (acc[exp.category] || 0) + Number(exp.amount);
         return acc;
     }, {} as Record<string, number>);
     return (

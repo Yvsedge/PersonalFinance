@@ -40,7 +40,7 @@ export default function ExpensesList({onEdit} : Props) {
         exp => filter === "All" || exp.flow === filter
     );
     const properExpenses = filteredExpenses.filter(
-        exp => exp.name.toLowerCase().includes(search.toLowerCase())
+        exp => exp.name?.toLowerCase().includes(search.toLowerCase())
     );
     const sorted = () => {
         if (sort === "") return properExpenses;
