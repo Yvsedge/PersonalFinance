@@ -1,44 +1,50 @@
 # Personal Finance Tracker (PFT)
 
-A full-stack personal finance tracking application built with React, TypeScript, Express.js, and PostgreSQL.
+A full-stack personal finance management application built with **React**, **TypeScript**, **Express.js**, and **PostgreSQL**.
 
-This project was developed as a learning exercise to gain practical experience with modern frontend development, backend API development, database integration, and full-stack application architecture. It is my first project using Express.js and PostgreSQL.
+The application allows users to track income and expenses, analyze spending by category, and manage transactions through a clean and responsive interface.
+
+## Live Demo
+
+**Frontend:** https://pft-sigma.vercel.app
+
+**Backend API:** https://pft-backend-geiy.onrender.com
 
 ---
 
 ## Features
 
-### Dashboard
+### 📊 Dashboard
 
-* Current balance overview
-* Total income tracking
-* Total expense tracking
-* Transaction count
-* Category-wise expense breakdown
-* Recent transaction summary
+- Current balance overview
+- Total income tracking
+- Total expense tracking
+- Transaction count
+- Expense breakdown by category
+- Recent transactions section
 
-### Transaction Management
+### 💰 Transaction Management
 
-* Create transactions
-* Edit transactions
-* Delete transactions
-* Persistent storage using PostgreSQL
+- Create transactions
+- Update transactions
+- Delete transactions
+- Persistent database storage
 
-### Search, Filter & Sort
+### 🔍 Search, Filter & Sort
 
-* Search transactions by title
-* Filter by Income / Expense
-* Sort by:
-  * Latest
-  * Oldest
-  * Highest Amount
-  * Lowest Amount
+- Search by transaction title
+- Filter by Income / Expense
+- Sort by:
+  - Latest
+  - Oldest
+  - Highest Amount
+  - Lowest Amount
 
-### User Experience
+### 🗄️ Data Persistence
 
-* Loading state indicators
-* Error handling
-* Clean and modern UI
+- PostgreSQL database integration
+- RESTful API architecture
+- Persistent storage across sessions
 
 ---
 
@@ -46,94 +52,80 @@ This project was developed as a learning exercise to gain practical experience w
 
 ### Frontend
 
-* React
-* TypeScript
-* React Router
-* React Context API
-* useReducer
-* CSS
-* React Icons
-* React Spinners
-* Vite
+- React
+- TypeScript
+- React Router
+- React Context API
+- React Icons
+- React Spinners
+- CSS
+- Vite
 
 ### Backend
 
-* Node.js
-* Express.js
+- Express.js
+- Node.js
 
 ### Database
 
-* PostgreSQL
-* pg
-* dotenv
+- PostgreSQL
+- pg
 
-### Communication
+### Deployment
 
-* REST API
-* Fetch API
+- Vercel (Frontend)
+- Render (Backend)
 
 ---
 
-## What I Learned
+## Screenshots
 
-Through this project I gained hands-on experience with:
+### Dashboard
 
-### Frontend
+<img width="1900" height="1143" alt="image" src="https://github.com/user-attachments/assets/23264a1f-3ec4-40dd-be78-dbe4a94ed242" />
 
-* Building React applications using TypeScript
-* Creating reusable React components
-* Managing global state using Context API
-* State management with useReducer
-* Routing using React Router
-* Form handling and validation
+### Transactions
 
-### Backend
+<img width="1900" height="1030" alt="image" src="https://github.com/user-attachments/assets/40d8aa7c-4076-4069-93f7-5a4238e8b9b3" />
 
-* Building REST APIs with Express.js
-* Handling HTTP requests and responses
-* CRUD operations
-* Organizing backend project structure
+---
 
-### Database
+## Project Architecture
 
-* Designing relational database schemas
-* Connecting Node.js applications to PostgreSQL
-* Writing SQL queries
-* Implementing database-backed CRUD operations
+```text
+React + TypeScript (Frontend)
+            │
+            ▼
+        Fetch API
+            │
+            ▼
+      Express.js API
+            │
+            ▼
+       PostgreSQL
+```
 
-### Full-Stack Development
+---
 
-* Frontend-backend integration
-* Environment variable management
-* Project organization
-* Debugging and API testing with Thunder Client
+## API Endpoints
+
+| Method | Endpoint | Description |
+|----------|----------|----------|
+| GET | `/expenses` | Get all expenses |
+| GET | `/expenses/:id` | Get expense by ID |
+| POST | `/expenses` | Create expense |
+| PUT | `/expenses/:id` | Update expense |
+| DELETE | `/expenses/:id` | Delete expense |
 
 ---
 
 ## Installation
 
-### Clone the Repository
+### Clone Repository
 
 ```bash
 git clone https://github.com/Yvsedge/PersonalFinance.git
 cd PersonalFinance
-```
-
-### Frontend Setup
-
-```bash
-cd frontend
-npm install
-```
-
-Create:
-
-```env
-frontend/.env
-```
-
-```env
-VITE_API_URL=http://localhost:3000
 ```
 
 ### Backend Setup
@@ -143,47 +135,99 @@ cd backend
 npm install
 ```
 
-Create:
+Create a `.env` file inside the `backend` folder:
 
 ```env
-backend/.env
-```
-
-```env
-DB_USER=postgres
+DB_USER=your_username
 DB_PASSWORD=your_password
 DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=PersonalFinance
+
+FRONTEND_URL=http://localhost:5173
 ```
 
-### Create Database
-
-Create a PostgreSQL database named:
-
-```sql
-PersonalFinance
-```
-
-Run the schema provided in:
-
-```text
-backend/db/schema.sql
-```
-
-### Start Backend
+Start the backend server:
 
 ```bash
-cd backend
 npm start
 ```
 
-### Start Frontend
+### Frontend Setup
 
 ```bash
 cd frontend
+npm install
+```
+
+Create a `.env` file inside the `frontend` folder:
+
+```env
+VITE_API_URL=http://localhost:3000
+```
+
+Start the frontend:
+
+```bash
 npm run dev
 ```
+
+---
+
+## Database Schema
+
+```sql
+CREATE TABLE expenses (
+    id UUID PRIMARY KEY,
+    name TEXT NOT NULL,
+    amount NUMERIC NOT NULL,
+    category TEXT NOT NULL,
+    flow TEXT NOT NULL,
+    date DATE NOT NULL
+);
+```
+
+---
+
+## What I Learned
+
+Through this project I gained experience with:
+
+- React and TypeScript development
+- State management using Context API and Reducers
+- Building REST APIs with Express.js
+- PostgreSQL database integration
+- SQL queries and CRUD operations
+- Frontend-backend communication
+- Environment variable management
+- Deployment using Render and Vercel
+- Debugging production issues
+- CORS configuration
+- Full-stack application architecture
+
+---
+
+## Future Improvements
+
+### Short-Term
+
+- Transaction pagination
+- Date range filtering
+- Better form validation
+- Toast notifications
+- Improved mobile responsiveness
+
+### Long-Term
+
+- Authentication & Authorization
+- Multi-user support
+- Budget planning
+- Charts and visual analytics
+- Export transactions (CSV/PDF)
+- Recurring transactions
+- Dark mode
+- Docker support
+- CI/CD pipeline
 
 ---
 
@@ -191,7 +235,7 @@ npm run dev
 
 ```text
 PersonalFinance/
-
+│
 ├── backend/
 │   ├── db/
 │   │   ├── connection.js
@@ -214,67 +258,13 @@ PersonalFinance/
 │   │   ├── dispatch/
 │   │   ├── hooks/
 │   │   ├── pages/
-│   │   ├── types/
-│   │   ├── App.tsx
-│   │   └── main.tsx
+│   │   └── types/
 │   │
-│   ├── .env
+│   ├── vite.config.ts
 │   ├── package.json
-│   └── vite.config.ts
+│   └── .env
 │
-├── .gitignore
 └── README.md
 ```
 
 ---
-
-## Architecture
-
-```text
-React + TypeScript
-         │
-         ▼
-      Fetch API
-         │
-         ▼
-     Express API
-         │
-         ▼
-     PostgreSQL
-```
-
-The React frontend handles user interaction and state management, while the Express backend exposes RESTful API endpoints that communicate with a PostgreSQL database for persistent storage.
-
----
-
-## Future Improvements
-
-* User authentication
-* Monthly budget tracking
-* Data visualization and charts
-* Export transaction history
-* Dark mode
-* Mobile optimization
-* Pagination
-* Multi-user support
-
----
-
-## Known Limitations
-
-* No authentication system
-* Limited expense categories
-* No pagination for large transaction histories
-* Not optimized for mobile devices
-
----
-
-## Screenshots
-
-### Dashboard
-
-<img width="1920" height="1265" alt="image" src="https://github.com/user-attachments/assets/3ed19871-f83f-4641-9efa-0bb77db9d094" />
-
-### Transactions
-
-<img width="1920" height="1050" alt="image" src="https://github.com/user-attachments/assets/4496d726-c051-4857-b115-6f840349bf72" />
