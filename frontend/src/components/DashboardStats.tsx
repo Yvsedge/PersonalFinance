@@ -3,7 +3,7 @@ import CategoryCard from './CategoryCard'
 import RecentTransaction from './RecentTransaction'
 import SummaryCard from './SummaryCards'
 export default function DashboardStats() {
-    const {expenses, dispatch} = useExp();
+    const {expenses} = useExp();
 
     const totalIncome  = expenses
         .filter(exp => exp.flow === 'Income')
