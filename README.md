@@ -8,7 +8,7 @@ The application allows users to track income and expenses, analyze spending by c
 
 **Frontend:** https://pft-sigma.vercel.app
 
-**Backend API:** https://pft-backend-geiy.onrender/expenses
+**Backend API:** [https://pft-backend-geiy.onrender/expenses](https://pft-backend-gejy.onrender.com/expenses)
 
 ---
 
