@@ -5,8 +5,12 @@ import expenseRouter from "./routes/expense.js";
 const port = 3000;
 const app = express();
 app.use(express.json());
-app.use(cors());
-
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://your-vercel-domain.vercel.app"
+  ]
+}));
 app.use('/expenses', expenseRouter);
 
 app.listen(port, () => {
