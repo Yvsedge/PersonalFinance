@@ -8,6 +8,7 @@ type ExpContextType = {
     dispatch: React.Dispatch<ExpenseAction>;
     loading : boolean;
     error : boolean;
+    totalPage : number;
 };
 
 export const ExpContext = createContext<ExpContextType>({
@@ -15,4 +16,5 @@ export const ExpContext = createContext<ExpContextType>({
     dispatch: () => {},
     loading: true,
     error : false,
+    totalPage : 0,
 });

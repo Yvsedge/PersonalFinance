@@ -2,13 +2,86 @@ import pool from "./connection.js";
 
 
 const getExpenses = async (req, res) => {
-  try {
-    const results = await pool.query('SELECT * FROM expenses ORDER BY date ASC')
-    res.status(200).json(results.rows)
-  } catch (error) {
-    throw error;
-  }
-}
+    try {
+        const page = Number(req.query.page) || 1;
+        const filter =  (req.query.filter) || "";
+        const sort =  (req.query.sort) || "asc";
+        const search = (req.query.search) || "";
+        const limit = 10;
+        const offset = (page - 1) * limit;
+
+        const countResult = await pool.query(
+            'SELECT COUNT(*) FROM expenses'
+        );
+
+        const totalItems = Number(countResult.rows[0].count);
+        const totalPages = Math.ceil(totalItems / limit);
+
+        let query = `
+            SELECT *
+            FROM expenses
+            WHERE 1=1
+        `;
+
+        const values = [];
+
+        if (filter !== "All" && filter !== "") {
+            values.push(filter);
+            query += ` AND flow = $${values.length}`;
+        }
+
+        console.log(query);
+        console.log(values);
+
+        if (search !== "") {
+            values.push(`%${search}%`);
+            query += ` AND name ILIKE $${values.length}`;
+        }
+
+        console.log(query);
+        console.log(values);
+
+        if (sort === "Highest") {
+            query += ` ORDER BY amount DESC`;
+        }
+        else if (sort === "Lowest") {
+            query += ` ORDER BY amount ASC`;
+        }
+        else if (sort === "Latest") {
+            query += ` ORDER BY date ASC`;
+        }
+        else if(sort === 'Oldest'){
+            query += ` ORDER BY date DESC`;
+        }
+        else{
+            query += '';
+        }
+
+        console.log(query);
+        console.log(values);
+
+        values.push(limit);
+        query += ` LIMIT $${values.length}`;
+
+        values.push(offset);
+        query += ` OFFSET $${values.length}`;
+
+        console.log(query);
+        console.log(values);
+        
+        const results = await pool.query(query, values);
+
+        res.status(200).json({
+            page,
+            totalPages,
+            totalItems,
+            expenses: results.rows
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Server Error" });
+    }
+};
 
 const getExpenseById = async (req, res) => {
     const id = req.params.id;
