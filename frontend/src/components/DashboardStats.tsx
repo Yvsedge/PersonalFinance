@@ -73,7 +73,7 @@ export default function DashboardStats() {
     "#EF4444"
     ];
 
-    function PieChartDefaultIndex({ isAnimationActive = true }: { isAnimationActive?: boolean }) {
+    function PieChartDefaultIndex() {
     return (
         <ResponsiveContainer
             width="100%"
@@ -115,7 +115,7 @@ export default function DashboardStats() {
                 >
                 {pieData.map((entry, index) => (
                     <Cell
-                    key={index}
+                    key={entry.name}
                     fill={COLORS[index % COLORS.length]}
                     />
                 ))}
@@ -138,7 +138,7 @@ export default function DashboardStats() {
             <div className="dashboardSub">
                 <p><span className="subheading dashboardSubHeading">Expenses By Category</span></p>
                 <div style={{display: "grid", gridTemplateColumns: "1fr 1fr"}}>
-                    <PieChartDefaultIndex isAnimationActive={true} />
+                    <PieChartDefaultIndex/>
                     <div className="dashboardCat">        
                         {
                             Object.entries(categories).map(([category, amount]) => (
