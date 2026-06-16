@@ -1,6 +1,19 @@
 import pool from "./connection.js";
 
 
+const getAllExpenses = async (req, res) => {
+    try{
+        const result = await pool.query(
+        'SELECT * FROM expenses ORDER BY date desc'
+        );
+        res.status(200).json({
+            expenses: result.rows
+        });
+    }catch(error){
+        throw error;
+    }
+}
+
 const getExpenses = async (req, res) => {
     try {
         const page = Number(req.query.page) || 1;
@@ -30,16 +43,12 @@ const getExpenses = async (req, res) => {
             query += ` AND flow = $${values.length}`;
         }
 
-        console.log(query);
-        console.log(values);
 
         if (search !== "") {
             values.push(`%${search}%`);
             query += ` AND name ILIKE $${values.length}`;
         }
 
-        console.log(query);
-        console.log(values);
 
         if (sort === "Highest") {
             query += ` ORDER BY amount DESC`;
@@ -48,17 +57,15 @@ const getExpenses = async (req, res) => {
             query += ` ORDER BY amount ASC`;
         }
         else if (sort === "Latest") {
-            query += ` ORDER BY date ASC`;
-        }
-        else if(sort === 'Oldest'){
             query += ` ORDER BY date DESC`;
         }
+        else if(sort === 'Oldest'){
+            query += ` ORDER BY date ASC`;
+        }
         else{
-            query += '';
+            query += ' ORDER BY date DESC';
         }
 
-        console.log(query);
-        console.log(values);
 
         values.push(limit);
         query += ` LIMIT $${values.length}`;
@@ -66,8 +73,6 @@ const getExpenses = async (req, res) => {
         values.push(offset);
         query += ` OFFSET $${values.length}`;
 
-        console.log(query);
-        console.log(values);
         
         const results = await pool.query(query, values);
 
@@ -141,9 +146,10 @@ const updateExpense = async (req, res) => {
 };
 
 export {
-  getExpenses,
-  getExpenseById,
-  createExpense,
-  deleteExpense,
-  updateExpense,
+    getAllExpenses,
+    getExpenses,
+    getExpenseById,
+    createExpense,
+    deleteExpense,
+    updateExpense,
 }

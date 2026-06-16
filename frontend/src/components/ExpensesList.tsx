@@ -1,21 +1,118 @@
-import {useExp} from '../hooks/useExp'
 import ExpenseCard from './ExpenseCard'
 import type{Expense} from '../types/Expenses'
 import {useSearchParams} from 'react-router-dom'
 import { useEffect, useState } from 'react';
+import { useQuery, useMutation , useQueryClient } from '@tanstack/react-query';
+
+import Spinner from './Spinner';
+import ErrorState from './ErrorState';
 type Props = {
     onEdit: (exp: Expense) => void;
 }
 
+
+type ExpensesResponse = {
+    expenses: Expense[];
+    totalPages: number;
+    totalItems: number;
+    page: number;
+};
+
 export default function ExpensesList({onEdit} : Props) {
-    const {expenses, dispatch, totalPage} = useExp();
+
     const [searchParams, setSearchParams] = useSearchParams();
 
     const page = Number(searchParams.get("page")) || 1;
-    const filter = searchParams.get("filter") || "All";
+    const filter = searchParams.get("filter") || "";
     const sort = searchParams.get("sort") || "";
     const search = searchParams.get("search") || "";
     const [searchInput, setSearchInput] = useState(search);
+
+    useEffect(() => {
+        if (searchInput === search) return;
+
+        const timeout = setTimeout(() => {
+            setSearchParams({
+                page: "1",
+                filter,
+                sort,
+                search: searchInput
+            });
+        }, 500);
+
+        return () => clearTimeout(timeout);
+    }, [searchInput, search, filter, sort, setSearchParams]);
+    
+
+    const queryClient = useQueryClient();
+
+    const fetchExpenses = async (
+        page: number,
+        filter: string,
+        sort: string,
+        search: string
+    ): Promise<ExpensesResponse> => {
+        const res = await fetch(
+            `${import.meta.env.VITE_API_URL}/expenses?page=${page}&filter=${filter}&sort=${sort}&search=${search}`
+        );
+
+        if (!res.ok) {
+            throw new Error("Failed to fetch");
+        }
+
+        return res.json();
+    };
+
+    const deleteMutation = useMutation({
+        mutationFn: async (id: string) => {
+            const response = await fetch(
+                `${import.meta.env.VITE_API_URL}/expenses/${id}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error();
+            }
+
+            return response.json();
+        },
+
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["expenses"]
+            });
+
+            queryClient.invalidateQueries({
+                queryKey: ["dashboardExpenses"]
+            });
+        }
+    });
+
+
+    
+
+    const { data, isLoading, error} = 
+    useQuery({
+        queryKey: [
+            "expenses",
+            page,
+            filter,
+            sort,
+            search
+        ],
+        queryFn: () =>
+            fetchExpenses(
+                page,
+                filter,
+                sort,
+                search
+            )
+    });
+
+    const expenses = data?.expenses ?? [];
+    const totalPage = data?.totalPages ?? 1;
     
     const handleFilterChange = (
         value: "" | "Income" | "Expense"
@@ -39,44 +136,19 @@ export default function ExpensesList({onEdit} : Props) {
         })
     };
 
-    useEffect(() => {
-        if (searchInput === search) return;
+      if (isLoading) {
+        return <Spinner></Spinner>;
+    }
 
-        const timeout = setTimeout(() => {
-            setSearchParams({
-                page: "1",
-                filter,
-                sort,
-                search: searchInput
-            });
-        }, 500);
+    if (error) {
+        return <ErrorState></ErrorState>;
+    }
 
-        return () => clearTimeout(timeout);
-    }, [searchInput, search, filter, sort, setSearchParams]);
 
-    const handleDelete = async (id : string) => {
 
-        const response = await fetch(
-            `${import.meta.env.VITE_API_URL}/expenses/${id}`,
-            {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-            }
-        );
-
-        if (!response.ok) {
-            console.error("Delete failed");
-            return;
-        }
-
-        dispatch({
-            type : "REMOVE_EXP",
-            expID : id,
-        });
-
-    };    
+    const handleDelete = (id: string) => {
+        deleteMutation.mutate(id);
+    };
     
     return (
         <div>
@@ -124,10 +196,10 @@ export default function ExpensesList({onEdit} : Props) {
             </div>
             <div className="transactionList">
                 {
-                expenses.length === 0 
-                    ? <p>No transactions yet — add one</p>
-                    : expenses.length === 0 && search !== ""
-                    ? <p>No transactions match your search</p>
+                    expenses.length === 0 && search !== ""
+                        ? <p>No transactions match your search</p>
+                    : expenses.length === 0
+                        ? <p>No transactions yet — add one</p>
                     : expenses.map(exp =>
                                         <ExpenseCard 
                                                     key={exp.id} 
