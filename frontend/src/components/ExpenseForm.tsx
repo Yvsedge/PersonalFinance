@@ -1,19 +1,96 @@
 import type{ Expense } from '../types/Expenses'
-import {useExp} from '../hooks/useExp'
 import React, { useState , useEffect} from 'react';
-
+import { useNavigate } from 'react-router-dom';
+import {useMutation , useQueryClient } from '@tanstack/react-query';
+import Spinner from './Spinner';
+import ErrorState from './ErrorState';
 type Props = {
     editing: Expense | null;
     onClear: () => void;
 }
 
+
+
 export default function ExpenseForm({editing, onClear} : Props) {
+    useEffect(() => {
+        if(editing){
+            setText(editing.name);
+            setAmount(editing.amount);
+            setFlow(editing.flow);
+            setCat(editing.category);
+        }
+    }, [editing]);
+    
+    const navigate = useNavigate();
     const [text, setText] = useState<string>("");
     const [amount, setAmount] = useState<number>(0);
     const [flow, setFlow] = useState<string>("")
     const [cat, setCat] = useState<"Food" | "Travel" | "Shopping" | "Bills" | "--">("Bills");
-    
-    const {dispatch} = useExp();
+
+    const queryClient = useQueryClient();
+
+    const createExpenseMutation = useMutation({
+        mutationFn: async (expense: Expense) => {
+            const response = await fetch(
+                `${import.meta.env.VITE_API_URL}/expenses`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(expense)
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error();
+            }
+
+            return response.json();
+        },
+
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["dashboardExpenses"]
+            });
+
+            queryClient.invalidateQueries({
+                queryKey: ["expenses"]
+            });
+        }
+    });
+
+    const updateExpenseMutation = useMutation({
+        mutationFn: async (expense: Expense) => {
+            const response = await fetch(
+                `${import.meta.env.VITE_API_URL}/expenses/${expense.id}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(expense)
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Failed to update expense");
+            }
+
+            return response.json();
+        },
+
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["dashboardExpenses"]
+            });
+
+            queryClient.invalidateQueries({
+                queryKey: ["expenses"]
+            });
+        }
+    });
+
     const handleSubmit = async () => {
 
         if(text.trim() === "") return;
@@ -28,23 +105,9 @@ export default function ExpenseForm({editing, onClear} : Props) {
             date : new Date().toISOString()
         };
 
-        const response = await fetch(
-            `${import.meta.env.VITE_API_URL}/expenses`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(obj)
-            }
-        );
+        await createExpenseMutation.mutateAsync(obj);       
 
-        const newExp = await response.json();
-        dispatch({
-            type: "ADD_EXP",
-            expense: newExp
-        });
-
+        navigate("/transactions?page=1");
         setText("");
         setAmount(0);
         setFlow("");
@@ -64,23 +127,9 @@ export default function ExpenseForm({editing, onClear} : Props) {
             date : new Date().toISOString()
         };
 
-        const response = await fetch(
-            `${import.meta.env.VITE_API_URL}/expenses/${editing.id}`,
-            {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(obj)
-            }
-        );
+        await updateExpenseMutation.mutateAsync(obj);   
 
-        const newExp = await response.json();
-        dispatch({
-            type : "UPDATE_EXP",
-            expense : newExp,
-        });
-
+        navigate("/transactions?page=1");
         setText("");
         setAmount(0);
         setFlow("");
@@ -105,14 +154,6 @@ export default function ExpenseForm({editing, onClear} : Props) {
         onClear();
     };
 
-    useEffect(() => {
-        if(editing){
-            setText(editing.name);
-            setAmount(editing.amount);
-            setFlow(editing.flow);
-            setCat(editing.category);
-        }
-    }, [editing]);
     return (
         <div className="expenseFormContainer">
             <p className="formTitle">
@@ -166,7 +207,13 @@ export default function ExpenseForm({editing, onClear} : Props) {
                         </select>
                     </label>
                 )}
-                <button type="submit">{editing ? "Update Transaction" : "Add Transaction"}</button>
+                <button
+                    type="submit"     
+                    disabled={
+                    createExpenseMutation.isPending ||
+                    updateExpenseMutation.isPending
+                }
+                >{editing ? "Update Transaction" : "Add Transaction"}</button>
                 {editing && (
                     <button onClick={() => handleClear()} className="cancelBtn">
                         Cancel

@@ -3,10 +3,9 @@ import ExpenseForm from '../components/ExpenseForm'
 import ExpensesList from '../components/ExpensesList'
 import type {Expense} from '../types/Expenses'
 
-type Props = {
-};
 
-export default function AddExpense({}: Props) {
+
+export default function AddExpense() {
     const [editing, setEditing] = useState<Expense | null>(null);
     return (
         <div className="addExpenseContainer">

@@ -3,6 +3,7 @@ import * as db from "../db/queries.js";
 
 const router = express.Router();
 
+router.get("/dashboard", db.getAllExpenses);
 router.get("/", db.getExpenses);
 router.get("/:id", db.getExpenseById);
 router.post("/", db.createExpense);
