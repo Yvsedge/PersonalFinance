@@ -137,7 +137,7 @@ export default function DashboardStats() {
             </div>
             <div className="dashboardSub">
                 <p><span className="subheading dashboardSubHeading">Expenses By Category</span></p>
-                <div style={{display: "grid", gridTemplateColumns: "1fr 1fr"}}>
+                <div style={{display: "grid", gridTemplateColumns: "1fr 1fr", gap : "var(--space-4)", alignItems : "center"}}>
                     <PieChartDefaultIndex/>
                     <div className="dashboardCat">        
                         {
