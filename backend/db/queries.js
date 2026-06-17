@@ -23,12 +23,6 @@ const getExpenses = async (req, res) => {
         const limit = 10;
         const offset = (page - 1) * limit;
 
-        const countResult = await pool.query(
-            'SELECT COUNT(*) FROM expenses'
-        );
-
-        const totalItems = Number(countResult.rows[0].count);
-        const totalPages = Math.ceil(totalItems / limit);
 
         let query = `
             SELECT *
@@ -36,17 +30,28 @@ const getExpenses = async (req, res) => {
             WHERE 1=1
         `;
 
+        let countQuery = `
+            SELECT COUNT(*)
+            FROM expenses
+            WHERE 1=1
+        `;
+
         const values = [];
+        const countValues = [];
 
         if (filter !== "All" && filter !== "") {
             values.push(filter);
+            countValues.push(filter);
             query += ` AND flow = $${values.length}`;
+            countQuery += ` AND flow = $${countValues.length}`;
         }
 
 
         if (search !== "") {
             values.push(`%${search}%`);
+            countValues.push(`%${search}%`);
             query += ` AND name ILIKE $${values.length}`;
+            countQuery += ` AND name ILIKE $${values.length}`;
         }
 
 
@@ -75,6 +80,10 @@ const getExpenses = async (req, res) => {
 
         
         const results = await pool.query(query, values);
+        const countResult = await pool.query(countQuery, countValues);
+        
+        const totalItems = Number(countResult.rows[0].count);
+        const totalPages = Math.ceil(totalItems / limit);
 
         res.status(200).json({
             page,

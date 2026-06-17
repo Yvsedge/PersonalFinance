@@ -8,8 +8,6 @@ type Props = {
     onClear: () => void;
 }
 
-
-
 export default function ExpenseForm({editing, onClear} : Props) {
     useEffect(() => {
         if(editing){

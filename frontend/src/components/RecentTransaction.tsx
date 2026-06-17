@@ -25,7 +25,7 @@ export default function RecentTransactions({ transactions }: Props) {
                         <span>{exp.category} · {getDates(exp.date)}</span>
                     </div>
                     <div className={exp.flow === 'Income' ? 'gain' : 'loss'}>
-                        {exp.flow === 'Income' ? '+' : '-'}₹{exp.amount.toLocaleString('en-IN')}
+                        {exp.flow === 'Income' ? '+' : '-'}₹{Number(exp.amount).toLocaleString('en-IN')}
                     </div>
                 </div>
             ))}
