@@ -38,24 +38,6 @@
     background-color: var(--accent);
 }
 
-
-
-/*Cards*/
-
-.CardContainer{
-    background-color: var(--surface);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-sm);
-    padding: var(--space-4) var(--space-5);
-    border-radius: var(--radius-sm);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: var(--space-2);
-    height: fit-content;
-}
-
 .gain{
     color: var(--success);
 }
@@ -64,46 +46,27 @@
     color: var(--expense);
 }
 
-.balanceCard.gain{
-    color: var(--success);
-    border-top: 4px solid var(--success);
+/*Navbar*/
+
+.theme-toggle {
+    display: none;
 }
 
-.balanceCard.loss{
-    color: var(--expense);
-    border-top: 4px solid var(--expense);
+.theme-icon {
+    display: flex;
+    align-items: center;
+    font-size: var(--card-heading);
+    cursor: pointer;
+    transition: transform 0.3s ease;
 }
 
-.balanceCard{
-    grid-area: balance;
+.theme-icon:hover {
+    transform: rotate(40deg);
 }
 
-.incomeCard{
-    grid-area: income;  
-}
+/*Dashboard*/
 
-.incomeCard.gain{
-    border-top: 4px solid var(--success); 
-}
-
-.expenseCard {
-    grid-area: expense;
-}
-
-.expenseCard.loss{
-    border-top: 4px solid var(--expense);
-}
-
-.CardContainer .CardAmount{
-    font-size: var(--heading);
-    font-weight: bold;
-
-}
-
-.CardContainer .CardTitle{
-    font-size: var(--body-text);
-    color: var(--text-secondary);
-}
+/*Category Card*/
 
 .CatcardContainer{
     display: flex;
@@ -134,13 +97,12 @@
 
 .progressBar{
     min-width: 4px;
-    background-color: var(--primary);
     content: " ";
     transition: width 0.3s;
     height: 7px;
 }
 
-/*Dashboard*/
+/*DashboardStats*/
 
 .dashboardContainer{
     display: flex;
@@ -201,6 +163,66 @@
     color: var(--text-primary);
 }
 
+/*Summary Cards*/
+
+.CardContainer{
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-2);
+    height: fit-content;
+}
+
+
+.balanceCard.gain{
+    color: var(--success);
+    border-top: 4px solid var(--success);
+}
+
+.balanceCard.loss{
+    color: var(--expense);
+    border-top: 4px solid var(--expense);
+}
+
+.balanceCard{
+    grid-area: balance;
+}
+
+.incomeCard{
+    grid-area: income;  
+}
+
+.incomeCard.gain{
+    border-top: 4px solid var(--success); 
+}
+
+.expenseCard {
+    grid-area: expense;
+}
+
+.expenseCard.loss{
+    border-top: 4px solid var(--expense);
+}
+
+.CardContainer .CardAmount{
+    font-size: var(--heading);
+    font-weight: bold;
+
+}
+
+.CardContainer .CardTitle{
+    font-size: var(--body-text);
+    color: var(--text-secondary);
+}
+
+/*RecentTransaction*/
+
 .recentList {
     display: flex;
     flex-direction: column;
@@ -228,7 +250,7 @@ border-left: 5px solid var(--expense);
     border-top: none;
 }
 
-/*Transcations*/
+/*AddExpense*/
 
 .addExpenseContainer {
     display: grid;
@@ -237,6 +259,90 @@ border-left: 5px solid var(--expense);
     padding: var(--space-4);
     align-items: start;
 }
+
+.transactionList {
+    margin-top: var(--space-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background-color: var(--surface);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;  /* clips the radius on first/last rows */
+}
+
+.ExpenseCardBtns{
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    gap: var(--space-2);
+}
+
+.ExpenseCardBtns .deleteBtn{
+    min-width: 32px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: inherit;
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    transition: 0.3s ease-in-out;
+}
+
+.ExpenseCardBtns .editBtn{
+    min-width: 32px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: inherit;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    border-radius: var(--radius-full);
+    transition: 0.3s ease-in-out;
+}
+
+.ExpenseCardBtns .deleteBtn:hover{
+    background-color: var(--expense);
+    color: var(--background);
+    border: 1px solid var(--border);
+}
+
+.ExpenseCardBtns .editBtn:hover{
+    background-color: var(--primary);
+    color: var(--background);
+    border: 1px solid var(--border);
+}
+
+.ExpenseCardMain{
+    display: flex;
+    justify-content: space-between;
+}
+
+.incomeFlow{
+    border-left: 8px solid var(--success);
+}
+
+.expenseFlow{
+border-left: 8px solid var(--expense);
+}
+
+.ExpenseCardMain .FlowStats{
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    align-items: flex-start;
+}
+
+.NumericalStats{
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    align-items: center;
+    justify-content: center;
+    align-items: flex-end;
+}
+
 
 .FlowTitle{
     color: var(--text-primary);
@@ -310,6 +416,10 @@ border-left: 5px solid var(--expense);
     font-size: var(--sub-text);
 }
 
+.ExpenseCard:last-child {
+    border-bottom: none;  /* no divider on last row */
+}
+
 .formTitle{
     color: var(--text-primary);
     font-weight: 700;
@@ -327,91 +437,6 @@ border-left: 5px solid var(--expense);
     cursor: pointer;
 }
 
-.ExpenseCard:last-child {
-    border-bottom: none;  /* no divider on last row */
-}
-
-/* Wrap all cards in one container */
-.transactionList {
-    margin-top: var(--space-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    background-color: var(--surface);
-    box-shadow: var(--shadow-sm);
-    overflow: hidden;  /* clips the radius on first/last rows */
-}
-
-.ExpenseCardBtns{
-    width: 100%;
-    display: flex;
-    justify-content: end;
-    gap: var(--space-2);
-}
-
-.ExpenseCardBtns .deleteBtn{
-    min-width: 32px;
-    min-height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: inherit;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-full);
-    transition: 0.3s ease-in-out;
-}
-
-.ExpenseCardBtns .editBtn{
-    min-width: 32px;
-    min-height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: inherit;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-full);
-    transition: 0.3s ease-in-out;
-}
-
-.ExpenseCardBtns .deleteBtn:hover{
-    background-color: var(--expense);
-    color: var(--background);
-    border: 1px solid var(--border);
-}
-
-.ExpenseCardBtns .editBtn:hover{
-    background-color: var(--primary);
-    color: var(--background);
-    border: 1px solid var(--border);
-}
-
-.ExpenseCardMain{
-    display: flex;
-    justify-content: space-between;
-}
-
-.incomeFlow{
-    border-left: 8px solid var(--success);
-}
-
-.expenseFlow{
-border-left: 8px solid var(--expense);
-}
-
-.ExpenseCardMain .FlowStats{
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    align-items: flex-start;
-}
-
-.NumericalStats{
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    align-items: center;
-    justify-content: center;
-    align-items: flex-end;
-}
 
 .expenseFormContainer {
     border: 1px solid var(--border);
@@ -438,8 +463,6 @@ border-left: 8px solid var(--expense);
     transition: 0.1s ease-in;
 }
 
-
-
 .expenseFormContainer form button:active{
   transform: translateY(1px);
 }
@@ -452,18 +475,3 @@ border-left: 8px solid var(--expense);
     gap: var(--space-1);
 }
 
-
-input, select {
-    width: 100%;
-    padding: var(--space-2) var(--space-3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--text-primary);
-    background: var(--background);
-}
-
-input:focus, select:focus {
-    outline: 2px solid var(--primary);
-    outline-offset: 1px;
-    border-color: var(--primary);
-}

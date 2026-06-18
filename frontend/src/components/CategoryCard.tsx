@@ -1,12 +1,13 @@
 type Props = {
     category : string,
     amount : number,
-    percentage : number
+    percentage : number,
+    color : string,
 };
 
 import { IoFastFoodSharp, IoAirplane, IoCart, IoNewspaperSharp  } from "react-icons/io5";  
 
-export default function CategoryCard({category, amount, percentage}: Props) {
+export default function CategoryCard({category, amount, percentage, color}: Props) {
     const formattedP = Math.round(percentage);
     const formattedAmount = new Intl.NumberFormat("en-IN").format(
         Math.abs(amount)
@@ -36,7 +37,7 @@ export default function CategoryCard({category, amount, percentage}: Props) {
                 </div>
             </div>
             <div className="progressBar"
-                style={{ width: `${formattedP}%` }}>
+                style={{ width: `${formattedP}%`, backgroundColor : color}}>
             </div>
         </div>
     );
