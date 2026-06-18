@@ -19,7 +19,7 @@
 --border: #E5E7EB;
 
 --text-primary: #111827;
---text-secondary: #4B5563;
+--text-secondary: #4B5563;  
 
 --radius-sm: 0.375rem;
 --radius-md: 0.75rem;
@@ -37,6 +37,32 @@
 
 --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
 --shadow-md: 0 2px 4px rgba(0,0,0,0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --primary: #CB7BD1;
+    --accent: #A8A6E8;
+    --success: #83B492;
+    --expense: #F87171;
+    --background: #0D0D0D;
+    --surface: #161618;
+    --border: #2A2B30;
+    --text-primary: #D8DFEE;
+    --text-secondary: #9CA6B4;
+  }
+}
+
+[data-theme="dark"] {
+  --primary: #CB7BD1;
+  --accent: #A8A6E8;
+  --success: #83B492;
+  --expense: #F87171;
+  --background: #0D0D0D;
+  --surface: #161618;
+  --border: #2A2B30;
+  --text-primary: #D8DFEE;
+  --text-secondary: #9CA6B4;
 }
 
 html{
@@ -89,4 +115,17 @@ ul{
     align-items: center;
 }
 
+input, select {
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    background: var(--background);
+}
 
+input:focus, select:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+    border-color: var(--primary);
+}

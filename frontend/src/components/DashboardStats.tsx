@@ -3,30 +3,42 @@ import {Link} from 'react-router-dom'
 import CategoryCard from './CategoryCard'
 import RecentTransaction from './RecentTransaction'
 import SummaryCard from './SummaryCards'
-import { Pie, PieChart, Tooltip , Cell, Legend, ResponsiveContainer } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
 import Spinner from './Spinner'
+import PieChartComponent from './PieChartComponent'
 import ErrorState from './ErrorState'
+import { useEffect, useState } from 'react';
 
 type DashboardResponse = {
     expenses: Expense[];
 };
 
+const fetchDashboardExpenses = async (): Promise<DashboardResponse> => {
+    const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/expenses/dashboard`
+    );
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch");
+    }
+
+    return res.json();
+};
 
 export default function DashboardStats() {
+
+    const [isDark, setIsDark] = useState(
+    document.documentElement.getAttribute('data-theme') === 'dark'
+    );
+
+    useEffect(() => {
+    const observer = new MutationObserver(() => {
+        setIsDark(document.documentElement.getAttribute('data-theme') === 'dark');
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    return () => observer.disconnect();
+    }, []);
     
-    const fetchDashboardExpenses = async (): Promise<DashboardResponse> => {
-        const res = await fetch(
-            `${import.meta.env.VITE_API_URL}/expenses/dashboard`
-        );
-
-        if (!res.ok) {
-            throw new Error("Failed to fetch");
-        }
-
-        return res.json();
-    };
-
     const { data, isLoading, error } = useQuery<DashboardResponse>({
         queryKey: ["dashboardExpenses"],
         queryFn: fetchDashboardExpenses,
@@ -66,68 +78,18 @@ export default function DashboardStats() {
         value: amount
     }));
 
-    const COLORS = [
-    "#7E2E84",
-    "#10B981",
-    "#F59E0B",
-    "#EF4444"
-    ];
+    const lightPalette = ["#7E2E84", "#10B981", "#F59E0B", "#EF4444"];
+    const darkPalette  = ["#CB7BD1", "#34D399", "#FBBF24", "#F87171"];
 
-    function PieChartDefaultIndex() {
-    return (
-        <ResponsiveContainer
-            width="100%"
-            height={300}
-        >
-            <PieChart width={400} height={400}>
-                <Pie 
-                    data={pieData}
-                    dataKey="value"
-                    nameKey="name"
-                    innerRadius={90}
-                    outerRadius={140}
-                    label={({ cx, cy }) => (
-                        <text
-                        x={cx}
-                        y={cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        >
-                        <tspan
-                            x={cx}
-                            dy="-10"
-                            fontSize="28"
-                            fontWeight="bold"
-                        >
-                            ₹{totalExpense.toLocaleString()}
-                        </tspan>
+    const palette = isDark ? darkPalette : lightPalette;
 
-                        <tspan
-                            x={cx}
-                            dy="25"
-                            fontSize="14"
-                            fill="#666"
-                        >
-                            Expenses
-                        </tspan>
-                        </text>
-                    )}
-                >
-                {pieData.map((entry, index) => (
-                    <Cell
-                    key={entry.name}
-                    fill={COLORS[index % COLORS.length]}
-                    />
-                ))}
-                </Pie>
-                <Tooltip defaultIndex={2} />
-                <Legend />
-            </PieChart>
-        </ResponsiveContainer>
-    );
+    const colorMap: Record<string, string> = {
+        Food:     palette[0],
+        Travel:   palette[1],
+        Bills:    palette[2],
+        Shopping: palette[3],
+    };
 
-    }
-    
     return (
         <div className="dashboardStats">
             <div className="dashboardMain">
@@ -137,16 +99,22 @@ export default function DashboardStats() {
             </div>
             <div className="dashboardSub">
                 <p><span className="subheading dashboardSubHeading">Expenses By Category</span></p>
-                <div style={{display: "grid", gridTemplateColumns: "1fr 1fr", gap : "var(--space-4)", alignItems : "center"}}>
-                    <PieChartDefaultIndex/>
-                    <div className="dashboardCat">        
-                        {
-                            Object.entries(categories).map(([category, amount]) => (
-                                category != "--" && <CategoryCard  key={category} category={category} amount={amount} percentage={(amount / totalExpense) * 100}></CategoryCard>
-                            ))
-                        }
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-4)", alignItems: "center" }}>
+                    <PieChartComponent palette={palette} pieData={pieData} totalExpense={totalExpense} isDark={isDark} />
+                    <div className="dashboardCat">
+                        {Object.entries(categories).map(([category, amount]) => {
+                        return category !== "--" && (
+                            <CategoryCard
+                            key={category}
+                            category={category}
+                            amount={amount}
+                            percentage={(amount / totalExpense) * 100}
+                            color={colorMap[category] ?? "#888"}
+                            />
+                        );
+                        })}
                     </div>
-                </div>
+                    </div>
                 <div className="dashboardRecent">
                         <div className="sectionHeader">
                             <span className="subheading dashboardSubHeading">Recent Transactions</span>
