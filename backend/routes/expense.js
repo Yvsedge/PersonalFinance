@@ -9,6 +9,8 @@ router.get("/:id", db.getExpenseById);
 router.post("/", db.createExpense);
 router.put("/:id", db.updateExpense);
 router.delete("/:id", db.deleteExpense);
+router.get("/analytics/monthly", db.getMonthly);
+router.get("/analytics/daily", db.getDaily);
 
 export default router;
 
