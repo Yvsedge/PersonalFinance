@@ -8,10 +8,19 @@ import Spinner from './Spinner'
 import PieChartComponent from './PieChartComponent'
 import ErrorState from './ErrorState'
 import { useEffect, useState } from 'react';
+import LineChartComponent from './LineChartComponent'
 
 type DashboardResponse = {
     expenses: Expense[];
 };
+
+type DExpenditure = {
+    content : {date : Date, total : number}[],
+}
+
+type MExpenditure = {
+    content : {month : Date, total : number}[],
+}
 
 const fetchDashboardExpenses = async (): Promise<DashboardResponse> => {
     const res = await fetch(
@@ -25,11 +34,37 @@ const fetchDashboardExpenses = async (): Promise<DashboardResponse> => {
     return res.json();
 };
 
+const fetchDailyExpenses = async () : Promise<DExpenditure> => {
+    const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/expenses/analytics/daily`
+    );
+
+    if(!res.ok){
+        throw new Error('Fetch to fetch');
+    }
+
+    return res.json();
+}
+
+const fetchMonthlyExpenses = async () : Promise<MExpenditure> => {
+    const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/expenses/analytics/monthly`
+    );
+
+    if(!res.ok){
+        throw new Error('Fetch to fetch');
+    }
+
+    return res.json();
+}
+
 export default function DashboardStats() {
 
-    const [isDark, setIsDark] = useState(
+    const [, setIsDark] = useState(
     document.documentElement.getAttribute('data-theme') === 'dark'
     );
+
+    const [toggle, setToggle] = useState<'daily' | 'monthly'>('daily');
 
     useEffect(() => {
     const observer = new MutationObserver(() => {
@@ -38,21 +73,60 @@ export default function DashboardStats() {
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     return () => observer.disconnect();
     }, []);
-    
-    const { data, isLoading, error } = useQuery<DashboardResponse>({
+
+    const {
+        data: dashboardData,
+        isLoading: dashboardLoading,
+        error: dashboardError
+    } = useQuery<DashboardResponse>({
         queryKey: ["dashboardExpenses"],
         queryFn: fetchDashboardExpenses,
     });
 
-    if (isLoading) {
+    const {
+        data: dailyData,
+        isLoading: dailyLoading,
+        error: dailyError
+    } = useQuery<DExpenditure>({
+        queryKey: ["dailyExpenditure"],
+        queryFn: fetchDailyExpenses,
+    });
+
+    const {
+        data: monthlyData,
+        isLoading: monthlyLoading,
+        error: monthlyError
+    } = useQuery<MExpenditure>({
+        queryKey: ["monthlyExpense"],
+        queryFn: fetchMonthlyExpenses,
+    });
+
+    if (dashboardLoading) {
         return <Spinner></Spinner>;
     }
 
-    if (error) {
+    if (dashboardError) {
         return <ErrorState></ErrorState>;
     }
 
-    const expenses = data?.expenses ?? [];
+    const expenses = dashboardData?.expenses ?? [];
+
+    const chartData =
+    toggle === "daily"
+        ? dailyData?.content.map(item => ({
+            date: new Date(item.date).toLocaleDateString("en-IN", {
+            day: "numeric",
+            month: "short",
+            }),
+            total: Number(item.total),
+        }))
+        : monthlyData?.content.map(item => ({
+            date: new Date(item.month).toLocaleDateString("en-IN", {
+                month: "short",
+                year: "2-digit",
+            }),
+            total: Number(item.total),
+        }));
 
     const totalIncome  = expenses
         .filter(exp => exp.flow === 'Income')
@@ -78,16 +152,13 @@ export default function DashboardStats() {
         value: amount
     }));
 
-    const lightPalette = ["#7E2E84", "#10B981", "#F59E0B", "#EF4444"];
-    const darkPalette  = ["#CB7BD1", "#34D399", "#FBBF24", "#F87171"];
-
-    const palette = isDark ? darkPalette : lightPalette;
+    const palette = ["var(--cat-travel)", "var(--cat-food)", "var(--cat-shopping)" , "var(--cat-bills)"]
 
     const colorMap: Record<string, string> = {
-        Food:     palette[0],
-        Travel:   palette[1],
-        Bills:    palette[2],
-        Shopping: palette[3],
+        Food:     "var(--cat-food)",
+        Travel:   "var(--cat-travel)",
+        Bills:    "var(--cat-bills)",
+        Shopping: "var(--cat-shopping)",
     };
 
     return (
@@ -98,22 +169,54 @@ export default function DashboardStats() {
                 <SummaryCard title={"Expense"} amount={totalExpense} expTrans={expenseTranscations} incTrans={0}></SummaryCard>
             </div>
             <div className="dashboardSub">
-                <p><span className="subheading dashboardSubHeading">Expenses By Category</span></p>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-4)", alignItems: "center" }}>
-                    <PieChartComponent palette={palette} pieData={pieData} totalExpense={totalExpense} isDark={isDark} />
-                    <div className="dashboardCat">
-                        {Object.entries(categories).map(([category, amount]) => {
-                        return category !== "--" && (
-                            <CategoryCard
-                            key={category}
-                            category={category}
-                            amount={amount}
-                            percentage={(amount / totalExpense) * 100}
-                            color={colorMap[category] ?? "#888"}
-                            />
-                        );
-                        })}
+                <div className="dashboardAreaG">
+                    {
+                    toggle === 'daily' ?
+                        dailyLoading 
+                        ? <Spinner></Spinner> 
+                        : dailyError 
+                        ? <ErrorState></ErrorState>
+                        :
+                        <div>
+                            <p><span className="subheading dashboardSubHeading">Expenses By {toggle === 'daily' ? "Day" : "Month"}</span></p>
+                            <LineChartComponent data={chartData ?? []}></LineChartComponent>
+                            <div className="dashboardButtons">
+                                <button onClick={() => setToggle('daily')}>Daily</button>
+                                <button onClick={() => setToggle('monthly')}>Monthly</button>
+                            </div>
+                        </div>
+                    : monthlyLoading 
+                    ? <Spinner/>
+                    :
+                    monthlyError
+                    ? <ErrorState></ErrorState>
+                    :
+                    <div>
+                        <p><span className="subheading dashboardSubHeading">Expenses By {"Month"}</span></p>
+                        <LineChartComponent data={chartData ?? []}></LineChartComponent>
+                        <div className="dashboardButtons">
+                            <button onClick={() => setToggle('daily')}>Daily</button>
+                            <button onClick={() => setToggle('monthly')}>Monthly</button>
+                        </div>
                     </div>
+                    }
+                </div>
+                <p><span className="subheading dashboardSubHeading">Expenses By Category</span></p>
+                    <div className="dashboardPieC" >
+                        <PieChartComponent palette={palette} pieData={pieData} totalExpense={totalExpense} />
+                        <div className="dashboardCat">
+                            {Object.entries(categories).map(([category, amount]) => {
+                            return category !== "--" && (
+                                <CategoryCard
+                                key={category}
+                                category={category}
+                                amount={amount}
+                                percentage={(amount / totalExpense) * 100}
+                                color={colorMap[category] ?? "#888"}
+                                />
+                            );
+                            })}
+                        </div>
                     </div>
                 <div className="dashboardRecent">
                         <div className="sectionHeader">
@@ -122,7 +225,7 @@ export default function DashboardStats() {
                                 View All →
                             </Link>
                         </div>
-                    <RecentTransaction transactions={expenses}></RecentTransaction>
+                    <RecentTransaction transactions={expenses.slice(0, 10)}></RecentTransaction>
                 </div>
             </div>
         </div>

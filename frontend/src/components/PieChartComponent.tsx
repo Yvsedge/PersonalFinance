@@ -4,14 +4,10 @@ type Props = {
     palette : string[],
     pieData : {name : string, value: number}[],
     totalExpense : number,
-    isDark : boolean
 };
 
 
-export default function PieChartComponent({palette, pieData, totalExpense, isDark}: Props) {
-
-    const subTextColor = isDark ? "#9CA6B4" : "#4B5563";
-    const totalTextColor = isDark ? "#D8DFEE" : "#111827";
+export default function PieChartComponent({palette, pieData, totalExpense}: Props) {
 
     return (
         <ResponsiveContainer width="100%" height={350}>
@@ -25,10 +21,10 @@ export default function PieChartComponent({palette, pieData, totalExpense, isDar
             labelLine={false} 
             label={({ cx, cy }) => (
                 <text x={cx} y={cy} textAnchor="middle" dominantBaseline="middle">
-                <tspan x={cx} dy="-10" fontSize="28" fontWeight="bold" fill={totalTextColor}>
+                <tspan x={cx} dy="-10" fontSize="28" fontWeight="bold" fill={"var(--text-primary)"}>
                     ₹{totalExpense.toLocaleString()}
                 </tspan>
-                <tspan x={cx} dy="25" fontSize="14" fill={subTextColor}>
+                <tspan x={cx} dy="25" fontSize="14" fill={"var(--text-secondary)"}>
                     Expenses
                 </tspan>
                 </text>
@@ -63,7 +59,7 @@ export default function PieChartComponent({palette, pieData, totalExpense, isDar
                         }} />
                         <span style={{
                             fontSize: "13px",
-                            color: isDark ? "#9CA6B4" : "#4B5563",
+                            color: "var(--text-primary)",
                         }}>
                             {entry.value}
                         </span>

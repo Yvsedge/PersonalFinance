@@ -135,6 +135,31 @@
     padding: var(--space-4);
 }
 
+.dashboardPieC{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+    align-items: center;
+}
+
+.dashboardAreaG{
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4);
+}
+
+.dashboardButtons{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.dashboardButtons button{
+    border-radius: var(--radius-sm);
+}
+
 .sectionHeader {
     display: flex;
     justify-content: space-between;
@@ -475,3 +500,84 @@ border-left: 8px solid var(--expense);
     gap: var(--space-1);
 }
 
+@media (max-width: 1111px) {
+
+    .balanceCard,
+    .incomeCard,
+    .expenseCard {
+        grid-area: auto;
+    }
+
+  /* General spacing */
+  .pageContainer {
+    padding: var(--space-2);
+  }
+
+  /* Dashboard cards */
+  .dashboardMain {
+    grid-template-columns: 1fr;
+    grid-template-areas: none;
+  }
+
+  .dashboardPieC {
+    grid-template-columns: 1fr;
+  }
+
+  /* Category cards under pie chart */
+  .dashboardCat {
+    margin: 0;
+  }
+
+  /* Add Expense page */
+  .addExpenseContainer {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: var(--space-4);
+  }
+
+  /* Transaction header */
+  .transactionListHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-2);
+  }
+
+  .transactionListHeader input {
+    margin: 0;
+    max-width: 100%;
+  }
+
+  .transactionListHeader .btns {
+    flex-wrap: wrap;
+  }
+
+  /* Recent transaction rows */
+  .recentRow {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+
+  /* Expense card */
+  .ExpenseCardMain {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .NumericalStats {
+    align-items: flex-start;
+  }
+
+  /* Form */
+  .expenseFormContainer {
+    width: 100%;
+  }
+
+  /* Large headings */
+  .subheading {
+    font-size: 1.5rem;
+  }
+
+  .CardContainer .CardAmount {
+    font-size: 2rem;
+  }
+}

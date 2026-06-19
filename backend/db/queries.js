@@ -154,6 +154,47 @@ const updateExpense = async (req, res) => {
     }
 };
 
+const getMonthly = async (req, res) => {
+    try{
+        const result = await pool.query(
+            `SELECT
+                DATE_TRUNC('month', date) AS month,
+                SUM(amount) AS total
+            FROM expenses
+            WHERE flow = $1
+            GROUP BY month
+            ORDER BY month`,
+            ['Expense']
+        );
+        res.status(200).json({
+            content: result.rows
+        });
+    }catch(error){
+        throw error;
+    }
+}
+
+const getDaily = async (req, res) => {
+    try{
+        const result = await pool.query(
+            `SELECT
+                DATE_TRUNC('day', date) AS date,
+                SUM(amount) AS total
+            FROM expenses
+            WHERE flow = $1
+            AND date >= CURRENT_DATE - $2::INTERVAL
+            GROUP BY date
+            ORDER BY date`,
+            ['Expense', '10 days']
+        );
+        res.status(200).json({
+            content: result.rows
+        });
+    }catch(error){
+        throw error;
+    }
+}
+
 export {
     getAllExpenses,
     getExpenses,
@@ -161,4 +202,6 @@ export {
     createExpense,
     deleteExpense,
     updateExpense,
+    getMonthly,
+    getDaily,
 }
