@@ -6,9 +6,7 @@ import { useState } from "react";
 import type{User} from '../types/Users'
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-
-
-
+import Spinner from '../components/Spinner'
 
 export default function Signup({}: Props) {
     const [first, setFirst] = useState("");
@@ -72,81 +70,90 @@ export default function Signup({}: Props) {
 
     return (
         <div className="Login">
-            <nav>
-                <span className="Title">PFT</span>
-            </nav>
-            <div className="loginBoard">
-                <div className="loginBoardContainer">
-                    <div className="loginContent">
-                        <div className="loginHeading">
-                            <p><span className="subheading">Create an Account</span></p>
-                            <p>Already have an account? <Link to="/login">Log in</Link></p>
-                        </div>
-                        <form onSubmit={handleSumbit}>
-                            <div className="loginNameField">
-                                <label htmlFor="firstname">First Name
-                                    <input 
-                                        type="text" 
-                                        name="firstname" 
-                                        id="firstname"
-                                        placeholder="John"
-                                        value={first}
-                                        onChange={(e) => setFirst(e.target.value)}
-                                    />
-                                </label>
-                                <label htmlFor="lastname">Last Name
-                                    <input 
-                                        type="text" 
-                                        name="lastname" 
-                                        id="lastname" 
-                                        placeholder="Doe"
-                                        value={last}
-                                        onChange={(e) => setLast(e.target.value)}
-                                    />
-                                </label>
+            {
+            createUserMutation.isPending ?
+            <>
+                <Spinner></Spinner>
+            </>
+            :
+            <>
+                <nav>
+                    <span className="Title">PFT</span>
+                </nav>
+                <div className="loginBoard">
+                    <div className="loginBoardContainer">
+                        <div className="loginContent">
+                            <div className="loginHeading">
+                                <p><span className="subheading">Create an Account</span></p>
+                                <p>Already have an account? <Link to="/login">Log in</Link></p>
                             </div>
-                            <label htmlFor="email">Email
-                                <input 
-                                    type="email" 
-                                    name="email" 
-                                    id="email" 
-                                    placeholder="xyz@email.com"
-                                    value={mail}
-                                    onChange={(e) => setMail(e.target.value)}
-                                />
-                            </label>
-                            <label htmlFor="password">Password
-                                <input 
-                                    type="password" 
-                                    name="password" 
-                                    id="password" 
-                                    placeholder="Enter Your Password"      
-                                    value={password}  
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
-                            </label>
-                            <label htmlFor="confirm">Confirm Password
-                                <input 
-                                    type="password" 
-                                    name="confirm" 
-                                    id="confirm" 
-                                    placeholder="Repeat your password"        
-                                    value={confirm}
-                                    onChange={(e) => setConfirm(e.target.value)}
-                                />
-                            </label>
-                            <button type="submit">Create Account</button>
-                        </form>
-                        <div className="altLogin">
-                            <p className="altLoginText">Or Register With</p>
-                            <button className="LoginGoogle">    
-                                <FcGoogle size={20} />
-                                Continue with Google
-                            </button>
+                            <form onSubmit={handleSumbit}>
+                                <div className="loginNameField">
+                                    <label htmlFor="firstname">First Name
+                                        <input 
+                                            type="text" 
+                                            name="firstname" 
+                                            id="firstname"
+                                            placeholder="John"
+                                            value={first}
+                                            onChange={(e) => setFirst(e.target.value)}
+                                        />
+                                    </label>
+                                    <label htmlFor="lastname">Last Name
+                                        <input 
+                                            type="text" 
+                                            name="lastname" 
+                                            id="lastname" 
+                                            placeholder="Doe"
+                                            value={last}
+                                            onChange={(e) => setLast(e.target.value)}
+                                        />
+                                    </label>
+                                </div>
+                                <label htmlFor="email">Email
+                                    <input 
+                                        type="email" 
+                                        name="email" 
+                                        id="email" 
+                                        placeholder="xyz@email.com"
+                                        value={mail}
+                                        onChange={(e) => setMail(e.target.value)}
+                                    />
+                                </label>
+                                <label htmlFor="password">Password
+                                    <input 
+                                        type="password" 
+                                        name="password" 
+                                        id="password" 
+                                        placeholder="Enter Your Password"      
+                                        value={password}  
+                                        onChange={(e) => setPassword(e.target.value)}
+                                    />
+                                </label>
+                                <label htmlFor="confirm">Confirm Password
+                                    <input 
+                                        type="password" 
+                                        name="confirm" 
+                                        id="confirm" 
+                                        placeholder="Repeat your password"        
+                                        value={confirm}
+                                        onChange={(e) => setConfirm(e.target.value)}
+                                    />
+                                </label>
+                                <button type="submit">Create Account</button>
+                            </form>
+                            <div className="altLogin">
+                                <p className="altLoginText">Or Register With</p>
+                                <button className="LoginGoogle">    
+                                    <FcGoogle size={20} />
+                                    Continue with Google
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </>
+            }
         </div>
     );
 }
