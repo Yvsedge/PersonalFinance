@@ -52,8 +52,14 @@ export default function ExpensesList({onEdit} : Props) {
         sort: string,
         search: string
     ): Promise<ExpensesResponse> => {
+        const token = localStorage.getItem("token");
         const res = await fetch(
-            `${import.meta.env.VITE_API_URL}/expenses?page=${page}&filter=${filter}&sort=${sort}&search=${search}`
+            `${import.meta.env.VITE_API_URL}/expenses?page=${page}&filter=${filter}&sort=${sort}&search=${search}`,
+            {
+                headers: {
+                    Authorization : `Bearer ${token}`
+                }
+            }
         );
 
         if (!res.ok) {
@@ -65,10 +71,14 @@ export default function ExpensesList({onEdit} : Props) {
 
     const deleteMutation = useMutation({
         mutationFn: async (id: string) => {
+            const token = localStorage.getItem("token");
             const response = await fetch(
                 `${import.meta.env.VITE_API_URL}/expenses/${id}`,
                 {
-                    method: "DELETE"
+                    method: "DELETE",
+                    headers: {
+                        Authorization : `Bearer ${token}`
+                    }
                 }
             );
 
@@ -81,17 +91,22 @@ export default function ExpensesList({onEdit} : Props) {
 
         onSuccess: () => {
             queryClient.invalidateQueries({
+                queryKey: ["dashboardExpenses"]
+            });
+
+            queryClient.invalidateQueries({
                 queryKey: ["expenses"]
             });
 
             queryClient.invalidateQueries({
-                queryKey: ["dashboardExpenses"]
+                queryKey: ["dailyExpenditure"]
+            });
+
+            queryClient.invalidateQueries({
+                queryKey: ["monthlyExpense"]
             });
         }
     });
-
-
-    
 
     const { data, isLoading, error} = 
     useQuery({

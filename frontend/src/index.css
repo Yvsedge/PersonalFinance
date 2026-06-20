@@ -3,6 +3,7 @@
 :root {
 --font-primary: "Inter", sans-serif;
 
+--logo : 3.5rem;
 --heading: 2.5rem;
 --subheading: 1.875rem;
 --card-heading: 1.25rem;
@@ -59,6 +60,8 @@
     --cat-food: #34D399;
     --cat-shopping: #FBBF24;
     --cat-travel: #F87171;
+    --shadow-sm: 0 1px 3px rgba(204, 204, 204, 0.08);
+    --shadow-md: 0 2px 4px rgba(204, 204, 204, 0.08);
   }
 }
 
@@ -76,10 +79,16 @@
     --cat-food: #34D399;
     --cat-shopping: #FBBF24;
     --cat-travel: #F87171;
+    --shadow-sm: 0 1px 3px rgba(204, 204, 204, 0.08);
+    --shadow-md: 0 2px 4px rgba(204, 204, 204, 0.08);
 }
 
 html{
     font-size: 16px;
+}
+
+#root{
+    height: 100dvh;
 }
 
 button,

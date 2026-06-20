@@ -29,7 +29,7 @@
     flex-direction: column;
 }
 
-.Title::After{
+.Title::after{
     content: " ";
     display: block;
     margin-top: -3px;
@@ -498,6 +498,138 @@ border-left: 8px solid var(--expense);
     justify-content: center;
     align-items: flex-start;
     gap: var(--space-1);
+}
+
+/*Login Section*/
+.Login{
+    height: 100vh;
+}
+
+.Login .Title{
+    font-size: var(--subheading);
+}
+
+.loginBoard{
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--space-4);
+    
+}
+
+.loginBoardContainer{
+    max-width: 1100px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--surface);
+    padding: var(--space-4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    gap: var(--space-3);
+    padding-bottom: var(--space-3);
+    padding-top: var(--space-3);
+    box-shadow: var(--shadow-md);
+}
+
+.loginContent .subheading{
+    font-size: var(--heading);
+    margin: var(--space-3) 0;
+    color: var(--text-primary);
+}
+
+.loginContent{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: var(--space-3);
+}
+
+.loginHeading{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+    font-size: var(--sub-text);
+    color: var(--text-secondary);
+}
+
+.loginContent form{
+    display: flex;
+    width: 100%;    
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+}
+
+.loginContent form button{
+    border-radius: var(--radius-sm);
+    padding: var(--space-3);
+}
+
+.loginContent form label{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: var(--space-1);
+}
+
+.loginNameField{
+    display: flex;
+    gap: var(--space-3);
+    width: 100%;
+}
+
+.loginNameField input{
+    flex: 1;
+}
+
+.altLogin{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: var(--space-4);
+    color: var(--text-secondary);
+    width: 100%;
+    gap: var(--space-3);
+}
+
+.altLogin .altLoginText{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: var(--sub-text);
+    gap: var(--space-2);
+    width: 100%;
+}
+
+.altLogin .altLoginText::after, .altLoginText::before{
+    content: "";
+    background-color: var(--text-secondary);
+    color: var(--text-secondary);
+    height: 0.8px;
+    flex: 1;
+}
+
+.altLogin button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-1);
+    background-color: var(--background);
+    color: var(--text-primary);
+    border-radius: var(--radius-sm);
+}
+
+.altLogin button:hover{
+    background-color: var(--surface);
 }
 
 @media (max-width: 1111px) {

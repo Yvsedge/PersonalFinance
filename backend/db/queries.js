@@ -1,10 +1,17 @@
 import pool from "./connection.js";
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
+import 'dotenv/config';
+
+const secretKey = process.env.JWT_SECRET;
 
 const getAllExpenses = async (req, res) => {
+    const userId = req.user.userId;
     try{
         const result = await pool.query(
-        'SELECT * FROM expenses ORDER BY date desc'
+        'SELECT * FROM expenses WHERE user_id = $1 ORDER BY date desc',
+        [userId]
         );
         res.status(200).json({
             expenses: result.rows
@@ -22,22 +29,23 @@ const getExpenses = async (req, res) => {
         const search = (req.query.search) || "";
         const limit = 10;
         const offset = (page - 1) * limit;
+        const userId = req.user.userId;
 
 
         let query = `
             SELECT *
             FROM expenses
-            WHERE 1=1
+            WHERE user_id = $1
         `;
 
         let countQuery = `
             SELECT COUNT(*)
             FROM expenses
-            WHERE 1=1
+            WHERE user_id = $1
         `;
 
-        const values = [];
-        const countValues = [];
+        const values = [userId];
+        const countValues = [userId];
 
         if (filter !== "All" && filter !== "") {
             values.push(filter);
@@ -51,7 +59,7 @@ const getExpenses = async (req, res) => {
             values.push(`%${search}%`);
             countValues.push(`%${search}%`);
             query += ` AND name ILIKE $${values.length}`;
-            countQuery += ` AND name ILIKE $${values.length}`;
+            countQuery += ` AND name ILIKE $${countValues.length}`;
         }
 
 
@@ -99,10 +107,11 @@ const getExpenses = async (req, res) => {
 
 const getExpenseById = async (req, res) => {
     const id = req.params.id;
+    const userId = req.user.userId;
     try{
         const result = await pool.query(
-        'SELECT * FROM expenses WHERE id = $1',
-        [id]
+        'SELECT * FROM expenses WHERE id = $1 AND user_id = $2',
+        [id, userId]
         );
         res.status(200).json(result.rows[0]);
     }catch(error){
@@ -112,12 +121,13 @@ const getExpenseById = async (req, res) => {
 
 const createExpense = async (req, res) => {
     const {id, name, amount, category, flow, date} = req.body;
+    const userId = req.user.userId;
     if(!id || !name || !amount || !flow || !date){
         return res.status(400).send('Invalid Input');
     }
     try{
-        const results = await pool.query('INSERT INTO expenses (id, name, amount, category, flow, date) VALUES($1, $2, $3, $4, $5, $6) RETURNING *',
-            [id, name, amount, category, flow, date]
+        const results = await pool.query('INSERT INTO expenses (id, name, amount, category, flow, date, user_id) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+            [id, name, amount, category, flow, date, userId]
         );
         res.status(201).json(results.rows[0]);
     }catch(error){
@@ -127,10 +137,11 @@ const createExpense = async (req, res) => {
 
 const deleteExpense = async (req, res) => {
     const id = req.params.id;
+    const userId = req.user.userId;
     try {
         await pool.query(
-            'DELETE FROM expenses WHERE id = $1',
-            [id]
+            'DELETE FROM expenses WHERE id = $1 and user_id = $2',
+            [id, userId]
         );
 
         res.status(200).json({
@@ -143,10 +154,11 @@ const deleteExpense = async (req, res) => {
 
 const updateExpense = async (req, res) => {
     const id = req.params.id;
+    const userId = req.user.userId;
     const { name, amount, category, flow, date } = req.body;
     try{
-        const result = await pool.query('UPDATE expenses SET name = $1, amount = $2, category = $3, flow = $4, date = $5 WHERE id = $6 RETURNING *',
-            [name, amount, category, flow, date, id]
+        const result = await pool.query('UPDATE expenses SET name = $1, amount = $2, category = $3, flow = $4, date = $5 WHERE id = $6 AND user_id = $7 RETURNING *',
+            [name, amount, category, flow, date, id, userId]
         )
         res.status(200).json(result.rows[0]);
     }catch(error){
@@ -155,6 +167,7 @@ const updateExpense = async (req, res) => {
 };
 
 const getMonthly = async (req, res) => {
+    const userId = req.user.userId;
     try{
         const result = await pool.query(
             `SELECT
@@ -162,9 +175,10 @@ const getMonthly = async (req, res) => {
                 SUM(amount) AS total
             FROM expenses
             WHERE flow = $1
+            AND user_id = $2
             GROUP BY month
             ORDER BY month`,
-            ['Expense']
+            ['Expense', userId]
         );
         res.status(200).json({
             content: result.rows
@@ -175,6 +189,7 @@ const getMonthly = async (req, res) => {
 }
 
 const getDaily = async (req, res) => {
+    const userId = req.user.userId;
     try{
         const result = await pool.query(
             `SELECT
@@ -182,16 +197,103 @@ const getDaily = async (req, res) => {
                 SUM(amount) AS total
             FROM expenses
             WHERE flow = $1
-            AND date >= CURRENT_DATE - $2::INTERVAL
+            AND user_id = $2
+            AND date >= CURRENT_DATE - $3::INTERVAL
             GROUP BY date
             ORDER BY date`,
-            ['Expense', '10 days']
+            ['Expense',userId, '10 days']
         );
         res.status(200).json({
             content: result.rows
         });
     }catch(error){
         throw error;
+    }
+}
+
+const addUser = async (req, res) => {
+    try{
+        const {id, first, last, mail, password} = req.body;
+        const hashedpassword = await bcrypt.hash(password, 10);
+
+        if(!id || !first || !last || !mail || !password){
+            return res.status(400).send("Invalid Input");
+        }
+        const result = await pool.query('INSERT INTO users (id, firstname, lastname, email, password) VALUES($1, $2, $3, $4, $5) RETURNING *',
+            [id, first, last, mail, hashedpassword]
+        );
+        res.status(201).json(result.rows[0]);
+    }catch(e){
+        throw e;
+    }
+};
+
+const login = async (req, res) => {
+    try {
+        const { mail, password } = req.body;
+
+        const result = await pool.query(
+            'SELECT * FROM users WHERE email = $1',
+            [mail]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(401).json({
+                message: 'Invalid email'
+            });
+        }
+
+        const user = result.rows[0];
+
+        const passwordMatch = await bcrypt.compare(
+            password,
+            user.password
+        );
+
+        if (!passwordMatch) {
+            return res.status(401).json({
+                message: 'Invalid password'
+            });
+        }
+
+        const token = jwt.sign(
+            {
+                userId: user.id,
+                email: user.email
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: "7d"
+            }
+        );
+
+        res.status(200).json({
+            token
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            message: 'Server Error'
+        });
+    }
+};
+
+const getMe = async (req, res) => {
+    const userId = req.user.userId;
+    try{
+        const result = await pool.query(
+            `
+            SELECT firstname, lastname, email
+            FROM users
+            WHERE id = $1
+            `, [userId]
+        );
+        res.status(200).json({
+            name : result.rows[0]
+        })
+    }catch(e){
+        throw e;
     }
 }
 
@@ -204,4 +306,7 @@ export {
     updateExpense,
     getMonthly,
     getDaily,
+    addUser,
+    login,
+    getMe
 }

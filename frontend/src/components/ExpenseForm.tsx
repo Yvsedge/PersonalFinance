@@ -28,12 +28,14 @@ export default function ExpenseForm({editing, onClear} : Props) {
 
     const createExpenseMutation = useMutation({
         mutationFn: async (expense: Expense) => {
+            const token = localStorage.getItem("token");
             const response = await fetch(
                 `${import.meta.env.VITE_API_URL}/expenses`,
                 {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
+                        Authorization : `Bearer ${token}`
                     },
                     body: JSON.stringify(expense)
                 }
@@ -54,17 +56,27 @@ export default function ExpenseForm({editing, onClear} : Props) {
             queryClient.invalidateQueries({
                 queryKey: ["expenses"]
             });
+
+            queryClient.invalidateQueries({
+                queryKey: ["dailyExpenditure"]
+            });
+
+            queryClient.invalidateQueries({
+                queryKey: ["monthlyExpense"]
+            });
         }
     });
 
     const updateExpenseMutation = useMutation({
         mutationFn: async (expense: Expense) => {
+            const token = localStorage.getItem("token");
             const response = await fetch(
                 `${import.meta.env.VITE_API_URL}/expenses/${expense.id}`,
                 {
                     method: "PUT",
                     headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
+                        Authorization : `Bearer ${token}`
                     },
                     body: JSON.stringify(expense)
                 }
@@ -84,6 +96,14 @@ export default function ExpenseForm({editing, onClear} : Props) {
 
             queryClient.invalidateQueries({
                 queryKey: ["expenses"]
+            });
+
+            queryClient.invalidateQueries({
+                queryKey: ["dailyExpenditure"]
+            });
+
+            queryClient.invalidateQueries({
+                queryKey: ["monthlyExpense"]
             });
         }
     });

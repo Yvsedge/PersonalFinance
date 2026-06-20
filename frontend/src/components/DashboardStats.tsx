@@ -23,8 +23,14 @@ type MExpenditure = {
 }
 
 const fetchDashboardExpenses = async (): Promise<DashboardResponse> => {
+    const token = localStorage.getItem("token");
     const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/expenses/dashboard`
+        `${import.meta.env.VITE_API_URL}/expenses/dashboard`,
+        {
+            headers: {
+                Authorization : `Bearer ${token}`
+            }
+        }
     );
 
     if (!res.ok) {
@@ -35,8 +41,14 @@ const fetchDashboardExpenses = async (): Promise<DashboardResponse> => {
 };
 
 const fetchDailyExpenses = async () : Promise<DExpenditure> => {
+    const token = localStorage.getItem("token");
     const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/expenses/analytics/daily`
+        `${import.meta.env.VITE_API_URL}/expenses/analytics/daily`,
+            {
+            headers: {
+                Authorization : `Bearer ${token}`
+            }
+        }
     );
 
     if(!res.ok){
@@ -47,8 +59,14 @@ const fetchDailyExpenses = async () : Promise<DExpenditure> => {
 }
 
 const fetchMonthlyExpenses = async () : Promise<MExpenditure> => {
+    const token = localStorage.getItem("token");
     const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/expenses/analytics/monthly`
+        `${import.meta.env.VITE_API_URL}/expenses/analytics/monthly`,
+            {
+            headers: {
+                Authorization : `Bearer ${token}`
+            }
+        }
     );
 
     if(!res.ok){
