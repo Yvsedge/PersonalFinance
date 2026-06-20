@@ -5,7 +5,6 @@ type props = {
 }
 
 export default function LineChartComponent({data} : props) {
-    console.log(data);
   return (
     <ResponsiveContainer width="100%" height={350}>
         <AreaChart

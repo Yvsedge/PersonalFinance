@@ -51,8 +51,6 @@ export default function Navbar() {
         queryFn: fetchMe
     });
 
-    console.log(data);
-
     useEffect(() => {
         const savedTheme =
             (localStorage.getItem('theme') as 'light' | 'dark') || 'light';
