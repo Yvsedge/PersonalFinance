@@ -85,7 +85,7 @@ export default function Signup({}: Props) {
                         <div className="loginContent">
                             <div className="loginHeading">
                                 <p><span className="subheading">Create an Account</span></p>
-                                <p>Already have an account? <Link to="/login">Log in</Link></p>
+                                <p>Already have an account? <Link to="/login" style={{color:"var(--primary)"}}>Log in</Link></p>
                             </div>
                             <form onSubmit={handleSumbit}>
                                 <div className="loginNameField">
