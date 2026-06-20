@@ -2,49 +2,80 @@
 
 A full-stack personal finance management application built with **React**, **TypeScript**, **Express.js**, and **PostgreSQL**.
 
-The application allows users to track income and expenses, analyze spending by category, and manage transactions through a clean and responsive interface.
+PFT allows users to securely manage their personal finances, track income and expenses, analyze spending patterns through interactive charts, and maintain separate accounts with JWT-based authentication.
+
+---
 
 ## Live Demo
 
 **Frontend:** https://pft-sigma.vercel.app
 
-**Backend API:** [https://pft-backend-geiy.onrender/expenses](https://pft-backend-gejy.onrender.com/expenses)
+**Backend API:** https://pft-backend-gejy.onrender.com
+
+### Demo Account
+
+Email: `johndoe@gmail.com`
+
+Password: `johndoe`
 
 ---
 
 ## Features
 
-### 📊 Dashboard
+### 🔐 Authentication
 
-- Current balance overview
-- Total income tracking
-- Total expense tracking
-- Transaction count
-- Expense breakdown by category
-- Recent transactions section
+* User registration
+* User login
+* JWT authentication
+* Protected routes
+* User-specific data isolation
+* Persistent login sessions
+
+### 📊 Dashboard Analytics
+
+* Current balance overview
+* Total income tracking
+* Total expense tracking
+* Transaction counts
+* Daily expense trend chart
+* Monthly expense trend chart
+* Expense breakdown by category
+* Recent transactions section
 
 ### 💰 Transaction Management
 
-- Create transactions
-- Update transactions
-- Delete transactions
-- Persistent database storage
+* Create transactions
+* Update transactions
+* Delete transactions
+* Pagination support
+* Secure user ownership checks
 
 ### 🔍 Search, Filter & Sort
 
-- Search by transaction title
-- Filter by Income / Expense
-- Sort by:
-  - Latest
-  - Oldest
-  - Highest Amount
-  - Lowest Amount
+* Search by transaction title
+* Filter by Income / Expense
+* Sort by:
+
+  * Latest
+  * Oldest
+  * Highest Amount
+  * Lowest Amount
+
+### 🎨 User Experience
+
+* Dark mode support
+* Responsive layout(Kind of)
+* Loading states
+* Error handling
+* Interactive charts
+* Category progress indicators
 
 ### 🗄️ Data Persistence
 
-- PostgreSQL database integration
-- RESTful API architecture
-- Persistent storage across sessions
+* PostgreSQL database
+* User-specific records
+* Secure password hashing with bcrypt
+* JWT token verification middleware
 
 ---
 
@@ -52,29 +83,31 @@ The application allows users to track income and expenses, analyze spending by c
 
 ### Frontend
 
-- React
-- TypeScript
-- React Router
-- React Context API
-- React Icons
-- React Spinners
-- CSS
-- Vite
+* React
+* TypeScript
+* Vite
+* React Router
+* TanStack Query
+* Recharts
+* React Icons
+* CSS
 
 ### Backend
 
-- Express.js
-- Node.js
+* Node.js
+* Express.js
+* JWT Authentication
+* bcrypt
 
 ### Database
 
-- PostgreSQL
-- pg
+* PostgreSQL
+* pg
 
 ### Deployment
 
-- Vercel (Frontend)
-- Render (Backend)
+* Vercel (Frontend)
+* Render (Backend)
 
 ---
 
@@ -82,40 +115,66 @@ The application allows users to track income and expenses, analyze spending by c
 
 ### Dashboard
 
-<img width="1900" height="1143" alt="image" src="https://github.com/user-attachments/assets/23264a1f-3ec4-40dd-be78-dbe4a94ed242" />
+<img width="1900" height="2562" alt="image" src="https://github.com/user-attachments/assets/17586390-8700-4ae6-b343-3e6a1d136bfb" />
+
+### Authentication
+
+<img width="1900" height="1118" alt="image" src="https://github.com/user-attachments/assets/42c1906d-3c37-4187-a2c2-b0a016e3ad78" />
+<img width="1900" height="1118" alt="image" src="https://github.com/user-attachments/assets/bd05225e-e255-4eb4-b352-253d80561795" />
 
 ### Transactions
 
-<img width="1900" height="1030" alt="image" src="https://github.com/user-attachments/assets/40d8aa7c-4076-4069-93f7-5a4238e8b9b3" />
+<img width="1900" height="1901" alt="image" src="https://github.com/user-attachments/assets/43cb3603-e699-44c6-b820-6029a8e5c371" />
+
 
 ---
 
 ## Project Architecture
 
 ```text
-React + TypeScript (Frontend)
-            │
-            ▼
-        Fetch API
-            │
-            ▼
-      Express.js API
-            │
-            ▼
-       PostgreSQL
+React + TypeScript
+        │
+        ▼
+ TanStack Query
+        │
+        ▼
+ Express REST API
+        │
+ JWT Middleware
+        │
+        ▼
+    PostgreSQL
 ```
 
 ---
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|----------|----------|----------|
-| GET | `/expenses` | Get all expenses |
-| GET | `/expenses/:id` | Get expense by ID |
-| POST | `/expenses` | Create expense |
-| PUT | `/expenses/:id` | Update expense |
-| DELETE | `/expenses/:id` | Delete expense |
+### Authentication
+
+| Method | Endpoint                  | Description      |
+| ------ | ------------------------- | ---------------- |
+| POST   | `/expenses/auth/register` | Register user    |
+| POST   | `/expenses/auth/login`    | Login user       |
+| GET    | `/expenses/auth/me`       | Get current user |
+
+### Expenses
+
+| Method | Endpoint              | Description        |
+| ------ | --------------------- | ------------------ |
+| GET    | `/expenses`           | Paginated expenses |
+| GET    | `/expenses/dashboard` | Dashboard data     |
+| GET    | `/expenses/:id`       | Expense by ID      |
+| POST   | `/expenses`           | Create expense     |
+| PUT    | `/expenses/:id`       | Update expense     |
+| DELETE | `/expenses/:id`       | Delete expense     |
+
+### Analytics
+
+| Method | Endpoint                      | Description      |
+| ------ | ----------------------------- | ---------------- |
+| GET    | `/expenses/analytics/daily`   | Daily expenses   |
+| GET    | `/expenses/analytics/monthly` | Monthly expenses |
 
 ---
 
@@ -135,19 +194,21 @@ cd backend
 npm install
 ```
 
-Create a `.env` file inside the `backend` folder:
+Create a `.env` file:
 
 ```env
-DB_USER=your_username
+DB_USER=your_user
 DB_PASSWORD=your_password
 DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=PersonalFinance
 
+JWT_SECRET=your_secret_key
+
 FRONTEND_URL=http://localhost:5173
 ```
 
-Start the backend server:
+Start backend:
 
 ```bash
 npm start
@@ -160,13 +221,13 @@ cd frontend
 npm install
 ```
 
-Create a `.env` file inside the `frontend` folder:
+Create a `.env` file:
 
 ```env
-VITE_API_URL=http://localhost:3000
+VITE_API_URL=http://localhost:3000/expenses
 ```
 
-Start the frontend:
+Start frontend:
 
 ```bash
 npm run dev
@@ -176,12 +237,27 @@ npm run dev
 
 ## Database Schema
 
+### Users
+
+```sql
+CREATE TABLE users (
+    id UUID PRIMARY KEY,
+    firstname TEXT NOT NULL,
+    lastname TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL
+);
+```
+
+### Expenses
+
 ```sql
 CREATE TABLE expenses (
     id UUID PRIMARY KEY,
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     amount NUMERIC NOT NULL,
-    category TEXT NOT NULL,
+    category TEXT,
     flow TEXT NOT NULL,
     date DATE NOT NULL
 );
@@ -193,41 +269,34 @@ CREATE TABLE expenses (
 
 Through this project I gained experience with:
 
-- React and TypeScript development
-- State management using Context API and Reducers
-- Building REST APIs with Express.js
-- PostgreSQL database integration
-- SQL queries and CRUD operations
-- Frontend-backend communication
-- Environment variable management
-- Deployment using Render and Vercel
-- Debugging production issues
-- CORS configuration
-- Full-stack application architecture
+* React and TypeScript
+* TanStack Query
+* JWT Authentication
+* Protected Routes
+* Password Hashing (bcrypt)
+* PostgreSQL Relationships
+* SQL Query Optimization
+* REST API Design
+* Full-Stack Architecture
+* Data Visualization
+* State Management
+* Deployment with Vercel and Render
+* Secure Multi-User Applications
 
 ---
 
 ## Future Improvements
 
-### Short-Term
-
-- Transaction pagination
-- Date range filtering
-- Better form validation
-- Toast notifications
-- Improved mobile responsiveness
-
-### Long-Term
-
-- Authentication & Authorization
-- Multi-user support
-- Budget planning
-- Charts and visual analytics
-- Export transactions (CSV/PDF)
-- Recurring transactions
-- Dark mode
-- Docker support
-- CI/CD pipeline
+* Budget planning
+* Savings goals
+* Recurring transactions
+* CSV/PDF exports
+* Email verification
+* Password reset
+* Google OAuth
+* Docker support
+* CI/CD pipeline
+* Automated testing
 
 ---
 
@@ -238,33 +307,21 @@ PersonalFinance/
 │
 ├── backend/
 │   ├── db/
-│   │   ├── connection.js
-│   │   ├── queries.js
-│   │   └── schema.sql
-│   │
+│   ├── middleware/
 │   ├── routes/
-│   │   └── expense.js
-│   │
 │   ├── server.js
-│   ├── package.json
 │   └── .env
 │
 ├── frontend/
-│   ├── public/
-│   │
 │   ├── src/
 │   │   ├── components/
-│   │   ├── context/
-│   │   ├── dispatch/
-│   │   ├── hooks/
 │   │   ├── pages/
-│   │   └── types/
+│   │   ├── hooks/
+│   │   ├── types/
+│   │   └── utils/
 │   │
 │   ├── vite.config.ts
-│   ├── package.json
 │   └── .env
 │
 └── README.md
 ```
-
----
