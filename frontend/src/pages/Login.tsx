@@ -181,6 +181,8 @@ export default function Login({}: Props) {
                                 <div className="altLogin">
                                     <p className="altLoginText">Or Register With</p>
                                     <GoogleLogin
+                                            theme="filled_black"
+                                            size="large"
                                             onSuccess={(credentialResponse) => {
                                                 if (!credentialResponse.credential) return;
 

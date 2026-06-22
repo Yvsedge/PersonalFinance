@@ -165,3 +165,7 @@ button{
 button:active{
   transform: translateY(1px);
 }
+
+button:hover{
+    cursor: pointer;
+}

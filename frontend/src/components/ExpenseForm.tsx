@@ -14,8 +14,8 @@ const insertionNotification = () => {
         style: {
             border: "1px solid var(--border)",
             borderRadius: "var(--radius-md)",
-            background: "var(--surface)",
-            color: "var(--success)"
+            backgroundColor: "var(--success)",
+            color: "var(--background)"
         }
     })
 }
@@ -25,8 +25,8 @@ const editNotification = () => {
         style: {
             border: "1px solid var(--border)",
             borderRadius: "var(--radius-md)",
-            background: "var(--surface)",
-            color: "var(--success)"
+            backgroundColor: "var(--success)",
+            color: "var(--background)"
         }
     })
 }
@@ -97,7 +97,8 @@ export default function ExpenseForm({editing, onClear} : Props) {
                 border: "1px solid var(--border)",
                 borderRadius: "var(--radius-md)",
                 background: "var(--surface)",
-                color: "var(--expense)"
+                backgroundColor: "var(--expense)",
+                color: "var(--background)"
             }
             });
         }
@@ -149,8 +150,8 @@ export default function ExpenseForm({editing, onClear} : Props) {
             style: {
                 border: "1px solid var(--border)",
                 borderRadius: "var(--radius-md)",
-                background: "var(--surface)",
-                color: "var(--success)"
+                backgroundColor: "var(--expense)",
+                color: "var(--background)"
             }
             });
         },
@@ -163,8 +164,9 @@ export default function ExpenseForm({editing, onClear} : Props) {
             toast.error("Invalid Input",{
                 style: {
                     background : "var(--surface)",
-                    color : "var(--primary)",
-                    border : "1px solid var(--border)"
+                    border : "1px solid var(--border)",
+                    backgroundColor: "var(--expense)",
+                    color: "var(--background)"
                 }
             });
             return;
@@ -193,8 +195,9 @@ export default function ExpenseForm({editing, onClear} : Props) {
             toast.error("Invalid Input",{
                 style: {
                     background : "var(--surface)",
-                    color : "var(--primary)",
-                    border : "1px solid var(--border)"
+                    border : "1px solid var(--border)",
+                    backgroundColor: "var(--expense)",
+                    color: "var(--background)"
                 }
             });
             return;

@@ -618,19 +618,6 @@ border-left: 8px solid var(--expense);
     flex: 1;
 }
 
-.altLogin button{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: var(--space-1);
-    background-color: var(--background);
-    color: var(--text-primary);
-    border-radius: var(--radius-sm);
-}
-
-.altLogin button:hover{
-    background-color: var(--surface);
-}
 
 @media (max-width: 1111px) {
 
