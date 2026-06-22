@@ -1,11 +1,14 @@
 type Props = {
 };
-import { FcGoogle } from "react-icons/fc";
+import { GoogleLogin } from "@react-oauth/google";
 import {useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Spinner from '../components/Spinner'
+import { toast } from "react-hot-toast";
+
+
 
 type Input = {
     mail : string,
@@ -25,7 +28,46 @@ export default function Login({}: Props) {
         }
     }, []);
 
-    
+        const googleLoginMutation = useMutation({
+            mutationFn: async (credential : string) => {
+                const response = await fetch(
+                    `${import.meta.env.VITE_API_URL}/expenses/auth/google`,
+                    {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        credential,
+                    }),
+                })
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message);
+                }
+
+                return response.json();
+            },
+            onSuccess: (data) => {
+            localStorage.setItem(
+                "token",
+                data.token
+            );
+
+            navigate("/");
+            },
+            onError: (error) => {
+                toast.error(error.message, {
+                    style: {
+                        background : "var(--surface)",
+                        color : "var(--primary)",
+                        border : "1px solid var(--border)"
+                    }
+                })
+            }
+    })
+
 
     const loginMutation = useMutation({
         mutationFn: async (input : Input) => {
@@ -41,7 +83,8 @@ export default function Login({}: Props) {
             );
 
             if (!response.ok) {
-                throw new Error();
+                const error = await response.json();
+                throw new Error(error.message);
             }
 
             return response.json();
@@ -54,11 +97,31 @@ export default function Login({}: Props) {
             );
 
             navigate("/");
+        },
+
+        onError: (error) => {
+            toast.error(error.message, {
+                style: {
+                    background : "var(--surface)",
+                    color : "var(--primary)",
+                    border : "1px solid var(--border)"
+                }
+            })
         }
     });
 
     const handleSumbit = async (e : React.SubmitEvent) => {
         e.preventDefault();
+
+        if (!mail || !password) {
+            toast.error("Please fill all fields",{
+                style: {
+                    background : "var(--surface)",
+                    color : "var(--primary)",
+                    border : "1px solid var(--border)"
+                }});
+            return;
+        }
 
         await loginMutation.mutateAsync({mail, password});
     };  
@@ -117,10 +180,18 @@ export default function Login({}: Props) {
                                 </form>
                                 <div className="altLogin">
                                     <p className="altLoginText">Or Register With</p>
-                                    <button className="LoginGoogle">    
-                                        <FcGoogle size={20} />
-                                        Continue with Google
-                                    </button>
+                                    <GoogleLogin
+                                            onSuccess={(credentialResponse) => {
+                                                if (!credentialResponse.credential) return;
+
+                                                googleLoginMutation.mutate(
+                                                    credentialResponse.credential
+                                                );
+                                            }}
+                                            onError={() => {
+                                                console.log("Google Login Failed");
+                                            }}
+                                        />
                                 </div>
                             </div>
                         </div>

@@ -17,4 +17,3 @@ const pool = process.env.DATABASE_URL
     });
 
 export default pool;
-

@@ -6,10 +6,10 @@ import { useQuery, useMutation , useQueryClient } from '@tanstack/react-query';
 
 import Spinner from './Spinner';
 import ErrorState from './ErrorState';
+import { toast } from 'react-hot-toast';
 type Props = {
     onEdit: (exp: Expense) => void;
 }
-
 
 type ExpensesResponse = {
     expenses: Expense[];
@@ -17,6 +17,17 @@ type ExpensesResponse = {
     totalItems: number;
     page: number;
 };
+
+const deleteNotification = () => {
+    toast.success("Deleted Successfully!", {
+        style: {
+            border: "1px solid var(--border)",
+            borderRadius: "var(--radius-md)",
+            background: "var(--surface)",
+            color: "var(--expense)"
+        }
+    })
+}
 
 export default function ExpensesList({onEdit} : Props) {
 
@@ -105,6 +116,8 @@ export default function ExpensesList({onEdit} : Props) {
             queryClient.invalidateQueries({
                 queryKey: ["monthlyExpense"]
             });
+
+            deleteNotification();
         }
     });
 

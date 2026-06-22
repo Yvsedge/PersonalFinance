@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { IoSunny } from "react-icons/io5";
 import { IoMoon } from "react-icons/io5";
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-hot-toast';
 
 type userInfo = {
     name : {
@@ -11,7 +12,6 @@ type userInfo = {
         email: string,
     }
 };
-
 
 
 const fetchMe = async (): Promise<userInfo> => {
@@ -32,6 +32,21 @@ const fetchMe = async (): Promise<userInfo> => {
         return res.json();
     };
 
+const message = (name : string) => {
+    if(name === "") return;
+    toast.promise(fetchMe, {
+        loading: "",
+        success: `Welcome Back ${name}!`,
+    }, {
+        style: {
+            border: "1px solid var(--border)",
+            borderRadius: "var(--radius-md)",
+            background: "var(--surface)",
+            color: "var(--primary)"
+        }
+    })
+}
+
 export default function Navbar() {
     const [theme, setTheme] = useState<'light' | 'dark'>('light');
     const queryClient = useQueryClient();
@@ -50,6 +65,11 @@ export default function Navbar() {
         queryKey: ["me"],
         queryFn: fetchMe
     });
+    
+    useEffect(() => {
+         message(data?.name.firstname ?? "");
+    }, [data?.name.firstname])
+    
 
     useEffect(() => {
         const savedTheme =
@@ -57,6 +77,7 @@ export default function Navbar() {
 
         setTheme(savedTheme);
         document.documentElement.setAttribute('data-theme', savedTheme);
+       
     }, []);
 
     const toggleTheme = () => {

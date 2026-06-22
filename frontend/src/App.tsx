@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard'
 import Layout from './pages/Layout'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
+
 import ProtectedRoute from './pages/ProtectedRoute'
 import './App.css'
 
@@ -21,7 +22,6 @@ function App() {
                   </ProtectedRoute>
               }
           />
-
           <Route
               path="/transactions"
               element={

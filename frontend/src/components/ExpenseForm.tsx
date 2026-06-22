@@ -2,10 +2,33 @@ import type{ Expense } from '../types/Expenses'
 import React, { useState , useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import {useMutation , useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-hot-toast';
 
 type Props = {
     editing: Expense | null;
     onClear: () => void;
+}
+
+const insertionNotification = () => {
+    toast.success("Inserted Successfully!", {
+        style: {
+            border: "1px solid var(--border)",
+            borderRadius: "var(--radius-md)",
+            background: "var(--surface)",
+            color: "var(--success)"
+        }
+    })
+}
+
+const editNotification = () => {
+    toast.success("Edited Successfully!", {
+        style: {
+            border: "1px solid var(--border)",
+            borderRadius: "var(--radius-md)",
+            background: "var(--surface)",
+            color: "var(--success)"
+        }
+    })
 }
 
 export default function ExpenseForm({editing, onClear} : Props) {
@@ -42,7 +65,8 @@ export default function ExpenseForm({editing, onClear} : Props) {
             );
 
             if (!response.ok) {
-                throw new Error();
+                const err = await response.json();
+                throw new Error(err.message);
             }
 
             return response.json();
@@ -63,6 +87,18 @@ export default function ExpenseForm({editing, onClear} : Props) {
 
             queryClient.invalidateQueries({
                 queryKey: ["monthlyExpense"]
+            });
+
+            insertionNotification();
+        },
+        onError: () => {
+            toast.error("Failed to create transaction", {
+            style: {
+                border: "1px solid var(--border)",
+                borderRadius: "var(--radius-md)",
+                background: "var(--surface)",
+                color: "var(--expense)"
+            }
             });
         }
     });
@@ -105,13 +141,34 @@ export default function ExpenseForm({editing, onClear} : Props) {
             queryClient.invalidateQueries({
                 queryKey: ["monthlyExpense"]
             });
-        }
+
+            editNotification();
+        },
+        onError: () => {
+            toast.error("Failed to Update transaction", {
+            style: {
+                border: "1px solid var(--border)",
+                borderRadius: "var(--radius-md)",
+                background: "var(--surface)",
+                color: "var(--success)"
+            }
+            });
+        },
+
     });
 
     const handleSubmit = async () => {
 
-        if(text.trim() === "") return;
-        if(amount <= 0) return;
+        if(!text || amount == 0 || flow == ""){
+            toast.error("Invalid Input",{
+                style: {
+                    background : "var(--surface)",
+                    color : "var(--primary)",
+                    border : "1px solid var(--border)"
+                }
+            });
+            return;
+        }
 
         const obj: Expense = {
             id: crypto.randomUUID(),
@@ -132,8 +189,16 @@ export default function ExpenseForm({editing, onClear} : Props) {
 
     const handleEdit = async () => {
         if(editing === null) return;
-        if(text.trim() === "") return;
-        if(amount <= 0) return;
+        if(!text || amount == 0 || flow == ""){
+            toast.error("Invalid Input",{
+                style: {
+                    background : "var(--surface)",
+                    color : "var(--primary)",
+                    border : "1px solid var(--border)"
+                }
+            });
+            return;
+        }
 
         const obj: Expense = {
             id: editing.id,

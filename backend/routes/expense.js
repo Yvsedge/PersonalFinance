@@ -12,6 +12,7 @@ router.get("/analytics/daily", verifyToken, db.getDaily);
 router.get("/getme",verifyToken, db.getMe);
 router.post("/auth/register", db.addUser);
 router.post("/auth/login", db.login);
+router.post("/auth/google", db.googleLogin);
 router.get("/:id",verifyToken, db.getExpenseById);
 router.post("/",verifyToken, db.createExpense);
 router.put("/:id",verifyToken, db.updateExpense);

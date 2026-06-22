@@ -1,10 +1,13 @@
 import pool from "./connection.js";
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-
+import { OAuth2Client } from "google-auth-library";
 import 'dotenv/config';
 
 const secretKey = process.env.JWT_SECRET;
+const client = new OAuth2Client(
+    process.env.GOOGLE_CLIENT_ID
+);
 
 const getAllExpenses = async (req, res) => {
     const userId = req.user.userId;
@@ -123,7 +126,7 @@ const createExpense = async (req, res) => {
     const {id, name, amount, category, flow, date} = req.body;
     const userId = req.user.userId;
     if(!id || !name || !amount || !flow || !date){
-        return res.status(400).send('Invalid Input');
+        return res.status(400).json('Invalid Input');
     }
     try{
         const results = await pool.query('INSERT INTO expenses (id, name, amount, category, flow, date, user_id) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *',
@@ -217,7 +220,7 @@ const addUser = async (req, res) => {
         const hashedpassword = await bcrypt.hash(password, 10);
 
         if(!id || !first || !last || !mail || !password){
-            return res.status(400).send("Invalid Input");
+            return res.status(400).json("Invalid Input");
         }
         const result = await pool.query('INSERT INTO users (id, firstname, lastname, email, password) VALUES($1, $2, $3, $4, $5) RETURNING *',
             [id, first, last, mail, hashedpassword]
@@ -297,6 +300,70 @@ const getMe = async (req, res) => {
     }
 }
 
+const googleLogin = async (req, res) => {
+    try{
+        const {credential} = req.body;
+
+        const ticket = 
+            await client.verifyIdToken({
+                idToken: credential,
+                audience:
+                    process.env.GOOGLE_CLIENT_ID
+            });
+        
+            const payload = ticket.getPayload();
+
+            const email = payload.email;
+            const firstname = payload.given_name;
+            const lastname = payload.family_name;
+
+            let user = await pool.query(
+                "SELECT * FROM users WHERE email = $1",
+                [email]
+            );
+
+
+            if (user.rows.length === 0) {
+                user = await pool.query(
+                    `
+                    INSERT INTO users
+                    (id, firstname, lastname, email)
+                    VALUES ($1,$2,$3,$4)
+                    RETURNING *
+                    `,
+                    [
+                        crypto.randomUUID(),
+                        firstname,
+                        lastname,
+                        email
+                    ]
+                );
+            }
+
+            const dbUser = user.rows[0];
+
+            const token = jwt.sign(
+                {
+                    userId: dbUser.id,
+                    email: dbUser.email
+                },
+                process.env.JWT_SECRET,
+                {
+                    expiresIn: "7d"
+                }
+            );
+
+            res.json({
+                token
+            });
+
+    }catch(e){
+        res.status(401).json({
+            message: "Google login failed"
+        });
+    }
+}
+
 export {
     getAllExpenses,
     getExpenses,
@@ -308,5 +375,6 @@ export {
     getDaily,
     addUser,
     login,
-    getMe
+    getMe,
+    googleLogin,
 }

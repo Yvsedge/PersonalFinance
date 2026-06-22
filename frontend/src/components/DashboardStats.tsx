@@ -1,80 +1,17 @@
-import type{Expense} from '../types/Expenses'
+import { useEffect, useState } from 'react';
+import type{DashboardResponse, DExpenditure, MExpenditure} from '../types/ApiType'
+import { useQuery } from '@tanstack/react-query';
 import {Link} from 'react-router-dom'
 import CategoryCard from './CategoryCard'
 import RecentTransaction from './RecentTransaction'
 import SummaryCard from './SummaryCards'
-import { useQuery } from '@tanstack/react-query';
 import Spinner from './Spinner'
 import PieChartComponent from './PieChartComponent'
 import ErrorState from './ErrorState'
-import { useEffect, useState } from 'react';
 import LineChartComponent from './LineChartComponent'
+import {fetchDashboardExpenses, fetchDailyExpenses, fetchMonthlyExpenses} from '../api/expenses'
 
-type DashboardResponse = {
-    expenses: Expense[];
-};
 
-type DExpenditure = {
-    content : {date : Date, total : number}[],
-}
-
-type MExpenditure = {
-    content : {month : Date, total : number}[],
-}
-
-const fetchDashboardExpenses = async (): Promise<DashboardResponse> => {
-    const token = localStorage.getItem("token");
-    const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/expenses/dashboard`,
-        {
-            headers: {
-                Authorization : `Bearer ${token}`
-            }
-        }
-    );
-
-    if (!res.ok) {
-        throw new Error("Failed to fetch");
-    }
-
-    return res.json();
-};
-
-const fetchDailyExpenses = async () : Promise<DExpenditure> => {
-    const token = localStorage.getItem("token");
-    const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/expenses/analytics/daily`,
-            {
-            headers: {
-                Authorization : `Bearer ${token}`
-            }
-        }
-    );
-
-    if(!res.ok){
-        throw new Error('Fetch to fetch');
-    }
-
-    return res.json();
-}
-
-const fetchMonthlyExpenses = async () : Promise<MExpenditure> => {
-    const token = localStorage.getItem("token");
-    const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/expenses/analytics/monthly`,
-            {
-            headers: {
-                Authorization : `Bearer ${token}`
-            }
-        }
-    );
-
-    if(!res.ok){
-        throw new Error('Fetch to fetch');
-    }
-
-    return res.json();
-}
 
 export default function DashboardStats() {
 
