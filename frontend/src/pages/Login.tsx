@@ -137,14 +137,13 @@ export default function Login({}: Props) {
                 <>
                     <nav>
                         <span className="Title">PFT</span>
-
                     </nav>
                     <div className="loginBoard">
                         <div className="loginBoardContainer">
                             <div className="loginContent">
                                 <div className="loginHeading">
-                                    <p><span className="subheading">Create an Account</span></p>
-                                    <p>Welcome Back Don't have an account? <Link to="/Sign" style={{color:"var(--primary)"}}>Sign Up</Link></p>
+                                    <p><span className="subheading">Sign In</span></p>
+                                    <p>Welcome Back,Don't have an account? <Link to="/Sign" style={{color:"var(--primary)"}}>Sign Up</Link></p>
                                 </div>
                                 <form onSubmit={handleSumbit}>
                                     <label htmlFor="email">Email
