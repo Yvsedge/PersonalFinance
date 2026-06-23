@@ -30,6 +30,7 @@ Password: `johndoe`
 * Protected routes
 * User-specific data isolation
 * Persistent login sessions
+* Google Auth
 
 ### 📊 Dashboard Analytics
 
@@ -69,6 +70,7 @@ Password: `johndoe`
 * Error handling
 * Interactive charts
 * Category progress indicators
+* Toast Notifications
 
 ### 🗄️ Data Persistence
 
@@ -87,6 +89,7 @@ Password: `johndoe`
 * TypeScript
 * Vite
 * React Router
+* React hot toast
 * TanStack Query
 * Recharts
 * React Icons
@@ -98,6 +101,7 @@ Password: `johndoe`
 * Express.js
 * JWT Authentication
 * bcrypt
+* Google OAuth
 
 ### Database
 
@@ -108,6 +112,7 @@ Password: `johndoe`
 
 * Vercel (Frontend)
 * Render (Backend)
+* Neon (Database)
 
 ---
 
@@ -157,6 +162,7 @@ React + TypeScript
 | POST   | `/expenses/auth/register` | Register user    |
 | POST   | `/expenses/auth/login`    | Login user       |
 | GET    | `/expenses/auth/me`       | Get current user |
+| POST   | `/expenses/auth/google`   | Get Google Cred  |
 
 ### Expenses
 
@@ -293,7 +299,6 @@ Through this project I gained experience with:
 * CSV/PDF exports
 * Email verification
 * Password reset
-* Google OAuth
 * Docker support
 * CI/CD pipeline
 * Automated testing
@@ -315,10 +320,11 @@ PersonalFinance/
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
+|   |   ├── api/
 │   │   ├── pages/
 │   │   ├── hooks/
-│   │   ├── types/
-│   │   └── utils/
+│   │   └── types/
+│   │   
 │   │
 │   ├── vite.config.ts
 │   └── .env
